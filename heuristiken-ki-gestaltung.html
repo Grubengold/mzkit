@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heuristiken für die Gestaltung von KI-Lösungen · Grubengold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Mulish:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#201F1B;
+    --text:#403D37;
+    --soft:#8C887E;
+    --white:#FFFFFF;
+    --alt:#F5F4F0;
+    --sage:#9DB39A;
+    --sage-deep:#5E7358;
+    --sage-tint:#E8EDE3;
+    --line:#E7E4DC;
+    --line-strong:#D9D5C9;
+    --gold:#E6A23A;
+    --coral:#E85C40;
+    --c-a:#2C7BE5; --c-a-ink:#1A5BC0;
+    --c-b:#FF5A36; --c-b-ink:#CC3C1E;
+    --c-c:#F2A100; --c-c-ink:#946100;
+    --c-d:#8A4FE6; --c-d-ink:#642BC2;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--white);color:var(--text);
+    font-family:"Mulish",system-ui,sans-serif;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .eyebrow{font-family:"Mulish";font-weight:600;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--soft);}
+
+  .brand{display:inline-flex;align-items:center;gap:1px;font-family:"Poppins";font-weight:700;
+    font-size:20px;letter-spacing:.04em;color:var(--ink);text-decoration:none;}
+  .brand img{height:30px;width:auto;display:block;}
+
+  header.hero{background:var(--white);border-bottom:1px solid var(--line);}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 0;gap:16px;}
+  .topbar .tag{font-family:"Mulish";font-weight:600;font-size:12.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--sage-deep);text-align:right;}
+  .hero-inner{padding:58px 0 64px;}
+  h1.title{font-family:"Poppins";font-weight:700;color:var(--ink);
+    font-size:clamp(33px,5.2vw,58px);line-height:1.08;letter-spacing:-.01em;margin:18px 0 0;max-width:17ch;}
+  .kw{color:var(--sage-deep);}
+  .lede{font-size:clamp(16px,1.7vw,19px);color:var(--text);max-width:60ch;margin:26px 0 0;line-height:1.6;}
+  .meta-line{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 30px;
+    font-family:"Mulish";font-weight:600;font-size:13.5px;color:var(--soft);}
+  .meta-line b{color:var(--sage-deep);font-weight:700;}
+
+  .legend-bar{position:sticky;top:0;z-index:20;background:rgba(232,237,227,.94);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .legend-inner{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:13px 24px;max-width:var(--maxw);margin:0 auto;}
+  .legend-label{font-family:"Mulish";font-weight:600;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--sage-deep);margin-right:4px;}
+  .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-strong);
+    background:var(--white);border-radius:999px;padding:7px 14px 7px 11px;cursor:pointer;
+    font-family:"Poppins";font-weight:500;font-size:13px;color:var(--ink);text-decoration:none;
+    transition:transform .12s,box-shadow .18s,border-color .18s;}
+  .chip:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(32,31,27,.08);}
+  .chip .dot{width:11px;height:11px;border-radius:50%;flex:none;}
+  .chip.controls{margin-left:auto;background:var(--sage-deep);border-color:var(--sage-deep);color:#fff;}
+  .chip.controls:hover{box-shadow:0 4px 14px rgba(94,115,88,.4);}
+  .chip:focus-visible,.acc-head:focus-visible,a:focus-visible{outline:2.5px solid var(--sage-deep);outline-offset:2px;}
+
+  main{padding:8px 0 30px;}
+  .cluster{padding:48px 0 6px;scroll-margin-top:66px;}
+  .cluster-head{padding-left:28px;}
+  .cluster-head .ce{font-family:"Mulish";font-weight:600;font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--cc-ink);display:block;margin-bottom:5px;}
+  .cluster-head h2{font-family:"Poppins";font-weight:600;font-size:clamp(23px,3vw,31px);
+    margin:0;letter-spacing:-.01em;color:var(--ink);}
+  .cluster-sub{padding-left:28px;color:var(--text);font-size:15.5px;margin:9px 0 22px;max-width:64ch;}
+
+  .seam-group{position:relative;padding-left:28px;}
+  .seam-group::before{content:"";position:absolute;left:4px;top:16px;bottom:18px;width:3px;
+    background:var(--cc);border-radius:3px;opacity:.85;}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:16px;
+    margin-bottom:13px;position:relative;transition:box-shadow .2s,border-color .2s;}
+  .card::before{content:"";position:absolute;left:-28px;top:50%;width:24px;height:3px;
+    background:var(--cc);transform:translateY(-50%);opacity:.5;transition:opacity .2s,height .2s;}
+  .card:hover{box-shadow:0 10px 28px rgba(32,31,27,.07);border-color:var(--line-strong);}
+  .card.open{box-shadow:0 14px 38px rgba(32,31,27,.1);border-color:color-mix(in srgb,var(--cc) 38%,var(--line));}
+  .card.open::before{opacity:1;height:5px;}
+
+  .acc-head{width:100%;text-align:left;background:none;border:0;cursor:pointer;font:inherit;color:inherit;
+    display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:start;padding:22px;border-radius:16px;}
+  .h-num{font-family:"Poppins";font-weight:700;font-size:23px;color:var(--cc);line-height:1;padding-top:2px;min-width:36px;}
+  .h-main{min-width:0;}
+  .h-tag{font-family:"Mulish";font-weight:600;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--cc-ink);display:inline-block;margin-bottom:8px;}
+  .h-title{font-family:"Poppins";font-weight:600;font-size:20px;line-height:1.28;letter-spacing:-.005em;margin:0 0 9px;color:var(--ink);}
+  .h-kern{margin:0;color:var(--text);font-size:16px;line-height:1.55;}
+  .h-kern b{color:var(--ink);font-weight:700;}
+
+  .toggle{width:32px;height:32px;border-radius:50%;flex:none;border:1.5px solid var(--line-strong);
+    display:grid;place-items:center;transition:transform .25s,background .2s,border-color .2s;margin-top:3px;}
+  .toggle svg{width:13px;height:13px;stroke:var(--soft);stroke-width:2.6;fill:none;transition:stroke .2s;}
+  .card.open .toggle{background:var(--cc);border-color:var(--cc);transform:rotate(90deg);}
+  .card.open .toggle svg{stroke:#fff;}
+
+  .acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s ease;}
+  .acc-body>.inner{overflow:hidden;}
+  .card.open .acc-body{grid-template-rows:1fr;}
+  .body-pad{padding:2px 22px 26px 76px;}
+  @media(max-width:560px){.body-pad{padding-left:22px;}}
+
+  .detail{margin:0 0 18px;}
+  .detail:last-child{margin-bottom:0;}
+  .detail h4{font-family:"Mulish";font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--cc-ink);margin:0 0 7px;display:flex;align-items:center;gap:9px;}
+  .detail h4::before{content:"";width:14px;height:2px;background:var(--cc);display:inline-block;}
+  .detail p{margin:0;color:var(--text);font-size:15.5px;line-height:1.62;}
+  .detail ul{margin:0;padding:0;list-style:none;}
+  .detail li{position:relative;padding-left:20px;margin-bottom:8px;font-size:15.5px;line-height:1.55;color:var(--text);}
+  .detail li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;border-radius:50%;background:var(--cc);opacity:.85;}
+  .ask{background:color-mix(in srgb,var(--cc) 7%,var(--white));border-left:3px solid var(--cc);
+    border-radius:0 10px 10px 0;padding:13px 16px;margin-top:4px;}
+  .ask p{font-style:italic;color:var(--ink);font-size:15.5px;}
+
+  .ghost{border:1.5px dashed var(--line-strong);background:var(--alt);border-radius:16px;padding:20px 22px;
+    display:flex;align-items:center;gap:16px;color:var(--soft);margin-left:28px;position:relative;}
+  .ghost::before{content:"";position:absolute;left:-28px;top:50%;width:24px;height:3px;background:var(--line-strong);transform:translateY(-50%);}
+  .ghost .plus{width:32px;height:32px;border-radius:50%;border:1.5px dashed var(--line-strong);
+    display:grid;place-items:center;flex:none;color:var(--soft);font-size:19px;}
+  .ghost b{font-family:"Poppins";font-weight:600;color:var(--ink);}
+
+  footer{background:var(--sage-tint);margin-top:46px;border-top:1px solid var(--line);}
+  .foot-inner{padding:50px 0 44px;}
+  .foot-inner h3{font-family:"Poppins";font-weight:600;color:var(--ink);font-size:22px;margin:0 0 12px;}
+  .foot-inner p{max-width:62ch;font-size:15px;line-height:1.62;margin:0 0 10px;color:var(--text);}
+  .foot-meta{margin-top:28px;padding-top:20px;border-top:1px solid var(--line-strong);
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
+    font-family:"Mulish";font-weight:600;font-size:12.5px;color:var(--soft);}
+  .foot-meta .heart{color:var(--coral);}
+  .foot-meta b{color:var(--sage-deep);}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="#"><img src="data:image/jpeg;base64,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" alt="Grubengold"></a>
+      <span class="tag">Menschenzentrierte KI-Transformation</span>
+    </div>
+  </div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Gestaltungsprinzipien</p>
+    <h1 class="title">Heuristiken für die Gestaltung von <span class="kw">KI-Lösungen</span> in Unternehmen</h1>
+    <p class="lede">Zwölf wissenschaftlich fundierte Prinzipien aus Human-Computer Interaction, Human-Factors-Forschung und Arbeitspsychologie. Jede Heuristik benennt nicht nur, was zu tun ist, sondern auch den kognitiven oder sozialen Negativeffekt, dem sie entgegenwirkt.</p>
+    <div class="meta-line">
+      <span>Version <b>v0.2</b></span>
+      <span><b>12</b> Heuristiken</span>
+      <span><b>4</b> Cluster</span>
+      <span>Stand <b>Juni 2026</b> · wird erweitert</span>
+    </div>
+  </div>
+</header>
+
+<nav class="legend-bar" aria-label="Cluster-Navigation">
+  <div class="legend-inner">
+    <span class="legend-label">Cluster</span>
+    <a class="chip" href="#cluster-a"><span class="dot" style="background:var(--c-a)"></span>System</a>
+    <a class="chip" href="#cluster-b"><span class="dot" style="background:var(--c-b)"></span>Interaktion</a>
+    <a class="chip" href="#cluster-c"><span class="dot" style="background:var(--c-c)"></span>Kognition</a>
+    <a class="chip" href="#cluster-d"><span class="dot" style="background:var(--c-d)"></span>Organisation</a>
+    <button class="chip controls" id="toggleAll" aria-pressed="false">Alle aufklappen</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section class="cluster" id="cluster-a" style="--cc:var(--c-a);--cc-ink:var(--c-a-ink)">
+    <div class="cluster-head"><span class="ce">Cluster A</span><h2>Systemgestaltung</h2></div>
+    <p class="cluster-sub">Wie das Gesamtsystem aus Technik, Rollen und Prozessen aufgesetzt wird — bevor die erste Interaktion stattfindet.</p>
+    <div class="seam-group">
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">01</span>
+          <span class="h-main">
+            <span class="h-tag">System</span>
+            <h3 class="h-title">Technik und Sozialsystem gemeinsam optimieren</h3>
+            <p class="h-kern">Gestalte nie nur das KI-Werkzeug, sondern <b>gleichzeitig Rollen, Aufgabenzuschnitte, Verantwortung und Lernprozesse</b> — das Prinzip der Joint Optimization.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Technologiegetriebene Einführung — ein Tool wird ausgerollt, die Arbeit „passiert" drumherum. Folge: unbeabsichtigte Arbeitsverdichtung, Rollendiffusion, verlorene Feedbackschleifen und ausbleibende Produktivitätsgewinne.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Parker &amp; Grote (2020) zeigen, dass digitale Technik je nach Gestaltung Job-Ressourcen (Autonomie, Kompetenznutzung, Feedback) stärkt oder zerstört — Work-Design-Entscheidungen müssen proaktiv während der Einführung getroffen werden. Kernsatz der soziotechnischen Tradition seit Trist &amp; Bamforth (1951): Wer nur das technische Teilsystem optimiert, suboptimiert das Ganze.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Jedes Projekt bekommt zwei gleichrangige Designstränge: technisch (Tool, Daten) und sozial (Rollen, Prozesse, Qualifizierung) — gemeinsam geplant, gemeinsam abgenommen.</li>
+            <li>Vorab klären: Welche Aufgaben verschwinden, welche entstehen neu (Prüfen, Kuratieren, Eskalieren)? Ist die neue Rolle ein vollwertiger Job — oder ein „Restjob"?</li>
+            <li>Work-Design-Kriterien als Abnahmekriterien führen, gleichrangig mit technischen KPIs.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Würden wir das Projekt auch dann einen Erfolg nennen, wenn die Arbeit der Menschen darin schlechter geworden ist?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">02</span>
+          <span class="h-main">
+            <span class="h-tag">System</span>
+            <h3 class="h-title">Betroffene zu Gestaltern machen</h3>
+            <p class="h-kern">Die Menschen, deren Arbeit sich verändert, sind die <b>wichtigste Wissensquelle</b> — beteilige sie früh, substanziell und mit echtem Einfluss.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Top-down eingeführte KI verfehlt die reale Arbeitspraxis und erzeugt Widerstand, Schatten-Nutzung oder stille Sabotage.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Partizipatives Design ist seit Mumfords ETHICS-Methode Kern der Soziotechnik; Parker &amp; Grote (2020) benennen die Befähigung von Beschäftigten und Interessenvertretungen explizit als Interventionsstrategie. Kellogg et al. (2024) zeigen zudem: Junioren können Senioren den KI-Einsatz nicht einfach „von unten" beibringen — Risikokompetenz braucht Domänenexpertise.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Pilotgruppen sind Co-Designer, nicht Testnutzer: Sie definieren mit, welche Aufgaben KI-geeignet sind und woran Erfolg gemessen wird.</li>
+            <li>Einwände als Designinformation behandeln, nicht als Change-Widerstand — mit dokumentiertem Verfahren, das ihren Einfluss nachweist.</li>
+            <li>Mitbestimmungsgremien als Gestaltungspartner am Anfang einbinden, nicht als Compliance-Schritt am Ende.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Können die Betroffenen eine Designentscheidung nachweislich verändert haben? Wenn nein: War es Partizipation oder Information?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">03</span>
+          <span class="h-main">
+            <span class="h-tag">System</span>
+            <h3 class="h-title">Die Fähigkeitsgrenze aufgabenscharf kartieren</h3>
+            <p class="h-kern">KI-Fähigkeit ist eine <b>zerklüftete Grenze</b> („Jagged Frontier"), keine Linie. Entscheide pro Aufgabe — nicht pro Abteilung — und prüfe es empirisch.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>KI ist bei ähnlich schwer wirkenden Aufgaben mal exzellent, mal verlässlich falsch — und sie scheitert <em>leise</em>, mit flüssigen, plausiblen Outputs. Pauschale Rollouts verleiten zum Einsatz jenseits der Kompetenzgrenze.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Im BCG-Feldexperiment (Dell'Acqua et al., 2023; 758 Berater) steigerte GPT-4 innerhalb der Grenze die Leistung deutlich. Außerhalb kehrte sich der Effekt um: ohne KI 84 % korrekt, mit KI nur 60–70 %. Die Folgeanalyse „Persuasion Bombing" (Randazzo et al., 2026) zeigt: Beim Hinterfragen gab das Modell seine Grenzen nicht zu, sondern verteidigte den Fehler mit eskalierender Argumentation.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Aufgabeninventar erstellen und klassifizieren: KI-geeignet / KI mit Prüfpflicht / KI-ungeeignet. Lebendiges Arbeitsmaterial, kein Einmal-Gutachten.</li>
+            <li>Eignung empirisch prüfen (Evaluation mit realen Fällen und bekannter Ground Truth) — nicht per Intuition oder Anbieterversprechen.</li>
+            <li>Verifikation gegen externe Quellen und eigene Fachexpertise — nie gegen das Modell selbst.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Für welche Kernaufgaben wissen wir — gemessen, nicht gefühlt — wo die Grenze liegt? Und woran erkennt jemand im Alltag, dass er sie überschreitet?</p></div></div>
+        </div></div></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="cluster" id="cluster-b" style="--cc:var(--c-b);--cc-ink:var(--c-b-ink)">
+    <div class="cluster-head"><span class="ce">Cluster B</span><h2>Interaktionsgestaltung</h2></div>
+    <p class="cluster-sub">Wie der einzelne Mensch im Moment der Nutzung mit der KI zusammenarbeitet — Rollenverteilung, Erwartung, Vertrauen.</p>
+    <div class="seam-group">
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">04</span>
+          <span class="h-main">
+            <span class="h-tag">Interaktion</span>
+            <h3 class="h-title">Den Menschen als Akteur halten, nicht als Restmonitor</h3>
+            <p class="h-kern">Gestalte die Arbeitsteilung so, dass der Mensch <b>aktiv urteilt und eingreift</b> — nicht passiv eine weitgehend autonome KI überwacht.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Die „Ironie der Automatisierung" (Bainbridge, 1983): Je besser die Automatik, desto mehr schrumpft die Rolle auf Überwachung und Ausnahmebehandlung — Tätigkeiten, in denen Menschen schwach sind (Vigilanzverlust) und für die ihnen zugleich die Übung fehlt.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Parasuraman &amp; Manzey (2010): Automation Complacency tritt unter Mehrfachbelastung auf, betrifft Novizen wie Experten und lässt sich durch bloße Übung nicht beseitigen. Parasuraman, Sheridan &amp; Wickens (2000) liefern das Modell der Automatisierungsstufen, um Automatisierungsgrade differenziert statt binär festzulegen.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Automatisierungsgrad pro Verarbeitungsstufe festlegen: KI aggregiert und schlägt vor (hoch), Bewertung und Entscheidung bleiben beim Menschen (niedrig) — statt Alles-oder-nichts.</li>
+            <li>Entscheidungen architektonisch beim Menschen verorten: KI liefert Entwürfe und Gegenargumente, der Mensch produziert das Urteil.</li>
+            <li>Wo Überwachung unvermeidlich ist: gegen Vigilanzverlust gestalten (Rotation, aktive Stichproben, regelmäßige manuelle Fälle).</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Beschreibt die Rolle nach der Einführung jemanden, der etwas <em>tut</em> — oder jemanden, der zuschaut, ob die Maschine etwas falsch macht?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">05</span>
+          <span class="h-main">
+            <span class="h-tag">Interaktion</span>
+            <h3 class="h-title">Können, Grenzen und Unsicherheit sichtbar machen</h3>
+            <p class="h-kern">Mache jederzeit klar, <b>was das System kann, wie gut es das kann</b> und wie sicher es sich im konkreten Fall ist.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Nutzer bilden ihr mentales Modell aus der Oberfläche: Flüssige Sprache und selbstbewusster Ton erzeugen Kompetenzillusionen weit über die tatsächliche Verlässlichkeit hinaus.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Die ersten beiden der 18 Guidelines von Amershi et al. (2019) — „Make clear what the system can do / how well" — adressieren genau dieses Erwartungsmanagement (validiert mit 49 Praktikern an 20 Produkten). Lee &amp; See (2004): Angemessenes Vertrauen braucht Information über Zweck, Prozess und Performanz.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Onboarding als Grenzen-Tour statt Feature-Tour: typische Fehlerklassen an realen Beispielen zeigen (Halluzination, veraltetes Wissen, sycophantische Zustimmung).</li>
+            <li>Wo möglich Unsicherheits- und Quellenangaben im Interface; wo nicht, prozessuale Marker mit Prüfpflicht.</li>
+            <li>Sprachregelung: Outputs heißen „Entwurf" oder „Hypothese", nicht „Ergebnis".</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Kann eine durchschnittliche Nutzerin drei typische Fehlerarten des Systems benennen und an einem Beispiel erkennen?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">06</span>
+          <span class="h-main">
+            <span class="h-tag">Interaktion</span>
+            <h3 class="h-title">Vertrauen kalibrieren, nicht maximieren</h3>
+            <p class="h-kern">Ziel ist nicht möglichst viel Vertrauen in die KI, sondern Vertrauen, das der <b>tatsächlichen Verlässlichkeit entspricht</b> — pro Aufgabentyp.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Beide Fehlkalibrierungen sind teuer: Übervertrauen führt zu ungeprüfter Übernahme (Misuse), Untervertrauen dazu, dass nützliche Systeme liegen bleiben (Disuse) — oft gleichzeitig, entlang von Erfahrungslinien.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Lee &amp; See (2004) liefern das Standardmodell: Angemessene Nutzung braucht Kalibrierung und situative Auflösung. Dell'Acqua (2022): Recruiter mit <em>besserer</em> KI (85 %) trafen schlechtere Entscheidungen als die mit schwächerer (75 %), weil sie ihr Urteil abschalteten. Dietvorst et al. (2015) beschreiben den Gegenpol — Algorithm Aversion nach beobachteten Fehlern.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Vertrauen aufgabenspezifisch trainieren statt genereller Pro-/Contra-Haltung.</li>
+            <li>Fehler erlebbar machen, bevor es zählt: Trainings, in denen Teilnehmer KI-Fehler aktiv finden, kalibrieren besser als Erfolgsdemos.</li>
+            <li>Nach Fehlern im Betrieb der Algorithm Aversion entgegenwirken: einordnen (erwartbare Fehlerquote vs. Skandal), statt das Werkzeug pauschal zu verwerfen.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Wo in unserer Organisation wird zu viel vertraut, wo zu wenig — und woher wissen wir das?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">07</span>
+          <span class="h-main">
+            <span class="h-tag">Interaktion</span>
+            <h3 class="h-title">Produktive Reibung an kritischen Stellen einbauen</h3>
+            <p class="h-kern">Baue an kritischen Stellen bewusst <b>kognitive Stolperschwellen</b> ein, die eigenes Denken auslösen, bevor der KI-Output übernommen wird.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Automation Bias hat zwei Gesichter: Omission Errors (man übersieht, was die KI auslässt) und Commission Errors (man übernimmt, was sie falsch behauptet). Der „kognitive Geizhals" wählt den Weg des geringsten Aufwands — flüssige Outputs machen ihn maximal bequem.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Buçinca et al. (2021) zeigen experimentell, dass <em>Cognitive Forcing Functions</em> — erst selbst entscheiden, dann KI sehen; Antwort verzögern; aktiv anfordern — Overreliance deutlich stärker senken als Erklärbarkeit allein. Microsofts ExtendAI-Studie (CHI 2025) bestätigt: Systeme, die Nutzer erst ihre eigene Überlegung artikulieren lassen, halten kognitives Engagement aufrecht.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>An Entscheidungspunkten mit Konsequenz: „Erst eigene Hypothese, dann KI" als Workflow-Schritt.</li>
+            <li>Verifikation mit definierter Methode: gegen welche Quelle, mit welcher Stichprobe, durch wen — als benannte Aufgabe mit Zeitbudget.</li>
+            <li>Reibung dosieren: Routine darf flüssig sein; Reibung gehört dorthin, wo Fehlerkosten hoch sind.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>An welchen drei Stellen wäre ein unentdeckter KI-Fehler am teuersten — und was zwingt dort heute zum Hinschauen?</p></div></div>
+        </div></div></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="cluster" id="cluster-c" style="--cc:var(--c-c);--cc-ink:var(--c-c-ink)">
+    <div class="cluster-head"><span class="ce">Cluster C</span><h2>Kognitive Effekte</h2></div>
+    <p class="cluster-sub">Was KI-Nutzung über die Zeit mit dem Denken und den Fähigkeiten der Menschen macht — und wie man dem entgegenwirkt.</p>
+    <div class="seam-group">
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">08</span>
+          <span class="h-main">
+            <span class="h-tag">Kognition</span>
+            <h3 class="h-title">Eigenleistung vor KI-Leistung</h3>
+            <p class="h-kern">Gestalte Prozesse so, dass KI das Denken <b>verlängert und herausfordert — nicht ersetzt</b>. Generieren vor Konsumieren.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Die bequeme Verfügbarkeit fertiger Lösungen verschiebt die Tätigkeit von Denken zu Übernehmen. Es droht ein Kreislauf: mehr Offloading → weniger Übung → geringere eigene Fähigkeit → noch mehr Offloading.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Gerlich (2025; N = 666) findet eine signifikant negative Korrelation zwischen häufiger KI-Nutzung und kritischem Denken, mediiert durch Cognitive Offloading. Lee et al. (CHI 2025; 319 Wissensarbeiter): Vertrauen in die KI geht mit <em>weniger</em> kritischem Denken einher, Vertrauen in die eigene Expertise mit <em>mehr</em>. Einordnung: vieles ist korrelativ/selbstberichtet — Grund für Vorsicht im Design, nicht für Alarmismus.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Sequenzregel für Denkaufgaben: eigene These zuerst, KI danach als Sparringspartner und Lückenfinder.</li>
+            <li>KI als „Verlängerung des Denkens" prompten: Gegenpositionen, Schwachstellen, sokratische Fragen — statt „mach mir fertig".</li>
+            <li>Fachexpertise als Schutzfaktor aufbauen; in Lernphasen (Junioren, neue Domänen) bewusst KI-reduzierte Aufgabenanteile.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Bei welchen Aufgaben ist der Denkprozess selbst das Wertvolle (Lernen, Urteil, Kreativität) — und schützen wir ihn dort?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">09</span>
+          <span class="h-main">
+            <span class="h-tag">Kognition</span>
+            <h3 class="h-title">Fähigkeiten aktiv erhalten und prüfen</h3>
+            <p class="h-kern">Behandle Fähigkeiten, die durch KI seltener geübt werden, wie <b>kritische Infrastruktur</b>: inventarisieren, trainieren, regelmäßig prüfen.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Fähigkeiten, die nicht geübt werden, verfallen — und genau die, die KI im Normalfall übernimmt, braucht der Mensch im Ausnahmefall (Ausfall, Grenzfall, Qualitätskontrolle). Die Automatik entzieht die Übung für die Rolle, die sie dem Menschen zuweist.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Budzyń et al. (2025, Lancet Gastroenterol Hepatol): Bei 19 erfahrenen Endoskopikern sank die Adenom-Detektionsrate in KI-freien Untersuchungen nach nur drei Monaten Routine-KI-Nutzung um 6 Prozentpunkte (28 % → 22 %) — Deskilling bei Experten, mit patientenrelevantem Endpunkt. Die Luftfahrt beantwortet dasselbe Muster (Autopilot) mit verpflichtendem manuellem Training.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Skill-Inventar je Rolle: Welche Fähigkeiten trägt künftig die KI? Welche davon sind im Stör-/Grenzfall unverzichtbar? Das ist die Erhaltungs-Agenda.</li>
+            <li>KI-freie Praxis institutionalisieren: rotierende „Manual Days" als legitimer Arbeitsbestandteil, nicht als Ineffizienz.</li>
+            <li>Nachwuchs gesondert denken — wer Fähigkeiten nie aufgebaut hat, kann sie nicht „erhalten".</li>
+            <li>Frühindikator: Qualität der Arbeit <em>ohne</em> Assistenz stichprobenhaft messen.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Wenn unser wichtigstes KI-System morgen drei Wochen ausfällt — was können wir dann nicht mehr auf heutigem Niveau? Und wüssten wir das vorher?</p></div></div>
+        </div></div></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="cluster" id="cluster-d" style="--cc:var(--c-d);--cc-ink:var(--c-d-ink)">
+    <div class="cluster-head"><span class="ce">Cluster D</span><h2>Soziale &amp; organisationale Effekte</h2></div>
+    <p class="cluster-sub">Was KI mit Kultur, Reputation, Autonomie und Verantwortung in der Organisation macht — und wie Governance wirksam bleibt.</p>
+    <div class="seam-group">
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">10</span>
+          <span class="h-main">
+            <span class="h-tag">Organisation</span>
+            <h3 class="h-title">Offene Nutzungskultur etablieren</h3>
+            <p class="h-kern">Mache transparente KI-Nutzung zur <b>respektierten Norm</b> — sonst entsteht verdeckte Nutzung ohne Qualitätssicherung, Lernen und Governance.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>KI-Nutzung ist sozial nicht neutral: Wer sie offenlegt, riskiert, als weniger kompetent und fauler zu gelten. Die rationale Einzelreaktion ist Verschweigen — und die Organisation verliert Sichtbarkeit genau dort, wo sie Qualitätssicherung und Lernen bräuchte (Schatten-KI).</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Reif, Larrick &amp; Soll (2025, PNAS; 4 Experimente, &gt; 4.400 Teilnehmer): eine <em>Social Evaluation Penalty</em> — KI-Nutzer werden als fauler und weniger kompetent bewertet; im Hiring-Experiment seltener eingestellt. Zwei Hebel: Die Abwertung verschwindet, wenn Bewertende selbst KI nutzen, und sinkt, wenn KI für die Aufgabe offensichtlich nützlich ist.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Führungskräfte legen die eigene KI-Nutzung konkret offen — der stärkste Hebel, da Bewertende mit eigener Erfahrung nicht abwerten.</li>
+            <li>Normen statt Beichten: klare Konventionen, wann KI-Nutzung erwartet und kennzeichnungspflichtig ist — Offenlegung als „geprüft von", nicht „zugegeben".</li>
+            <li>Anreizsysteme prüfen: Wird irgendwo implizit „eigenhändig = wertvoller" signalisiert?</li>
+            <li>Schatten-Nutzung als Symptom lesen, nicht als Schuld des Mitarbeiters.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Würde jemand in einem wichtigen Meeting sagen „diesen Entwurf hat die KI erstellt, ich habe X und Y geprüft" — ohne Reputationssorge?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">11</span>
+          <span class="h-main">
+            <span class="h-tag">Organisation</span>
+            <h3 class="h-title">Autonomie wahren, Überwachungsdrift verhindern</h3>
+            <p class="h-kern">Nutze KI, um <b>Handlungsspielräume zu erweitern</b> — und ziehe harte Grenzen gegen die schleichende Umnutzung zur Verhaltensüberwachung.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Dieselbe Dateninfrastruktur, die Workflows verbessert, kann Beschäftigte granular vermessen. Monitoring erhöht Job-Demands, senkt Autonomie und Vertrauen — und vergiftet die Offenheit aus Heuristik 10. Zweiter Qualitätskiller: Übernimmt KI die interessanten Teile, bleiben sinnentleerte Resttätigkeiten.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Parker &amp; Grote (2020) dokumentieren beide Pfade: Digitale Technik kann Job-Ressourcen stärken oder schwächen und Demands wie Performance-Monitoring erhöhen. Die Job-Design-Forschung seit Hackman &amp; Oldham zeigt robust: Autonomie und Aufgabenidentität treiben Motivation, Leistung und Proaktivität.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Zweckbindung als Designentscheidung: festlegen und zusichern, welche Nutzungsdaten <em>nicht</em> zur Leistungsbewertung dienen.</li>
+            <li>Aufgaben so schneiden, dass ganze, sinnvolle Arbeitsstücke beim Menschen bleiben — nicht die „Filetstücke" an die KI.</li>
+            <li>Wahlfreiheit, wo möglich: Mitentscheiden über das Maß an KI-Unterstützung ist selbst eine Job-Ressource.</li>
+            <li>Geteilte Daten in Lern- statt Kontrolllogik: Fehler verbessern das System, bewerten keine Personen.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Welche unserer KI-Systeme könnten technisch zur Mitarbeiterüberwachung umgenutzt werden — und welche verbindliche Regel verhindert das?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <article class="card">
+        <button class="acc-head" aria-expanded="false">
+          <span class="h-num">12</span>
+          <span class="h-main">
+            <span class="h-tag">Organisation</span>
+            <h3 class="h-title">Verantwortung adressierbar &amp; Oversight wirksam halten</h3>
+            <p class="h-kern">Für jede KI-gestützte Entscheidung mit Konsequenzen muss ein Mensch <b>benannt, befähigt und befugt</b> sein, sie zu verantworten — real, nicht auf dem Papier.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Negativeffekt</h4><p>Zwei Entartungen: die <em>Moral Crumple Zone</em> (Elish, 2019) — der Mensch dient als Haftungsknautschzone für Systemfehler, die er nicht verhindern konnte; und symbolische Oversight — ein „Human in the Loop"-Etikett legitimiert Entscheidungen, die mangels Zeit oder Kompetenz nicht wirklich geprüft werden.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Elish (2019) entwickelt das Crumple-Zone-Konzept aus Fallanalysen. Parasuraman &amp; Manzey (2010) erklären, warum bloße Anwesenheit keine Kontrolle garantiert. Art. 14 der EU-KI-Verordnung verlangt für Hochrisikosysteme <em>wirksame</em> menschliche Aufsicht — Wirksamkeit ist Designanforderung, nicht Organisationsfolklore.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Verantwortung vor Einführung klären; die Person erhält die drei B: Befugnis (Override ohne Rechtfertigungsdruck), Befähigung (Fehlermodi verstehen), Bedingungen (Zeit &amp; Information).</li>
+            <li>Override-Statistik beobachten: eine Überstimmungsrate von null ist ein Warnsignal, kein Gütesiegel.</li>
+            <li>Eskalationspfade definieren: Wer darf das System bei Verdacht anhalten?</li>
+            <li>Fairness der Zuschreibung prüfen: Konnte die Person den Fehler realistisch verhindern? Wenn nein, liegt er im Systemdesign.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Wenn morgen eine KI-gestützte Entscheidung Schaden anrichtet: Wissen wir heute, wer verantwortlich ist — und fände diese Person die Zuschreibung fair?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <div class="ghost">
+        <span class="plus" aria-hidden="true">+</span>
+        <span><b>Weitere Heuristiken folgen.</b><br>Dieses Set wächst — neue Prinzipien werden ergänzt, sobald die Evidenz es trägt.</span>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <h3>Wie diese Heuristiken zu lesen sind</h3>
+    <p>Jede Heuristik verdichtet Erkenntnisse aus Human-Computer Interaction, Human-Factors-Forschung und Arbeits- und Organisationspsychologie. Sie sind Orientierung, kein Rezept: Welche greift, hängt vom konkreten Anwendungsfall, der Aufgabe und der Organisation ab.</p>
+    <p>Leitidee bleibt durchgängig: KI unterstützt und befähigt den Menschen — sie ersetzt ihn nicht.</p>
+    <div class="foot-meta">
+      <span>Grubengold · <b>Menschenzentrierte KI-Transformation</b></span>
+      <span>Made with <span class="heart">♥</span> in Bochum · v0.2 · Stand Juni 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
+    cards.forEach(function(card){
+      var head = card.querySelector('.acc-head');
+      head.addEventListener('click', function(){
+        var open = card.classList.toggle('open');
+        head.setAttribute('aria-expanded', open ? 'true' : 'false');
+        syncToggleAll();
+      });
+    });
+    var btn = document.getElementById('toggleAll');
+    function syncToggleAll(){
+      var allOpen = cards.every(function(c){return c.classList.contains('open');});
+      btn.textContent = allOpen ? 'Alle zuklappen' : 'Alle aufklappen';
+      btn.setAttribute('aria-pressed', allOpen ? 'true' : 'false');
+    }
+    btn.addEventListener('click', function(){
+      var allOpen = cards.every(function(c){return c.classList.contains('open');});
+      cards.forEach(function(c){
+        c.classList.toggle('open', !allOpen);
+        c.querySelector('.acc-head').setAttribute('aria-expanded', (!allOpen).toString());
+      });
+      syncToggleAll();
+    });
+  })();
+</script>
+</body>
+</html>
