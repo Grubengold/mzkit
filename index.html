@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KI-Tools · Grubengold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Mulish:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#201F1B;
+    --text:#403D37;
+    --soft:#8C887E;
+    --white:#FFFFFF;
+    --alt:#F5F4F0;
+    --sage:#9DB39A;
+    --sage-deep:#5E7358;
+    --sage-tint:#E8EDE3;
+    --line:#E7E4DC;
+    --line-strong:#D9D5C9;
+    --gold:#E6A23A;
+    --coral:#E85C40;
+    --pink:#E5007D;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--white);color:var(--text);
+    font-family:"Mulish",system-ui,sans-serif;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .eyebrow{font-family:"Mulish";font-weight:600;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--soft);margin:0;}
+
+  .brand{display:inline-flex;align-items:center;gap:1px;font-family:"Poppins";font-weight:700;
+    font-size:20px;letter-spacing:.04em;color:var(--ink);text-decoration:none;}
+  .brand img{height:28px;width:auto;display:block;}
+
+  header.hero{background:var(--white);}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 0;gap:16px;}
+  .topbar .tag{font-family:"Mulish";font-weight:600;font-size:12.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--sage-deep);text-align:right;}
+  .hero-inner{padding:58px 0 64px;}
+  h1.title{font-family:"Poppins";font-weight:700;color:var(--ink);
+    font-size:clamp(33px,5.2vw,58px);line-height:1.08;letter-spacing:-.01em;margin:18px 0 0;max-width:22ch;}
+  .kw{color:var(--sage-deep);}
+  .lede{font-size:clamp(16px,1.7vw,19px);color:var(--text);max-width:62ch;margin:26px 0 0;line-height:1.6;}
+
+  a:focus-visible{outline:2.5px solid var(--sage-deep);outline-offset:2px;}
+
+  /* ---------- INDEX CARDS ---------- */
+  main{padding:0 0 72px;}
+  .doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+
+  .doc-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:32px 30px 34px;
+    text-decoration:none;
+    color:inherit;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    position:relative;
+    overflow:hidden;
+    transition:box-shadow .2s, border-color .2s, transform .12s;
+  }
+  .doc-card::before{
+    content:"";
+    position:absolute;
+    left:0;top:0;
+    height:100%;width:4px;
+    background:var(--accent,var(--pink));
+    opacity:0;
+    transition:opacity .2s;
+  }
+  .doc-card:hover{
+    box-shadow:0 14px 36px rgba(32,31,27,.09);
+    border-color:var(--line-strong);
+    transform:translateY(-3px);
+  }
+  .doc-card:hover::before{opacity:1;}
+
+  .doc-card--skills{--accent:var(--pink);}
+  .doc-card--heuristiken{--accent:var(--sage-deep);}
+
+  .doc-tag{
+    font-family:"Mulish";
+    font-weight:600;
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--accent,var(--pink));
+    margin:0;
+  }
+  .doc-title{
+    font-family:"Poppins";
+    font-weight:700;
+    font-size:clamp(20px,2.4vw,26px);
+    line-height:1.15;
+    letter-spacing:-.01em;
+    color:var(--ink);
+    margin:0;
+  }
+  .doc-desc{
+    font-size:15.5px;
+    line-height:1.6;
+    color:var(--text);
+    margin:0;
+    flex:1;
+  }
+  .doc-arrow{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-family:"Mulish";
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:.06em;
+    color:var(--accent,var(--pink));
+    margin-top:6px;
+  }
+  .doc-arrow svg{transition:transform .18s;}
+  .doc-card:hover .doc-arrow svg{transform:translateX(4px);}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--sage-tint);border-top:1px solid var(--line);}
+  .foot-inner{padding:50px 0 44px;}
+  .foot-meta{padding-top:20px;border-top:1px solid var(--line-strong);
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
+    font-family:"Mulish";font-weight:600;font-size:12.5px;color:var(--soft);}
+  .foot-meta .heart{color:var(--coral);}
+  .foot-meta b{color:var(--sage-deep);}
+
+  @media(max-width:640px){.doc-grid{grid-template-columns:1fr;}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="#"><img src="assets/gglogo.jpeg" alt="Grubengold"></a>
+    </div>
+  </div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Arbeitsmaterialien</p>
+    <h1 class="title">KI in Organisationen <span class="kw">verstehen</span> und <span class="kw">gestalten</span></h1>
+    </div>
+</header>
+
+<main class="wrap">
+  <div class="doc-grid">
+
+    <a class="doc-card doc-card--skills" href="ki-skills.html">
+      <p class="doc-tag">KI-Fähigkeitenraster</p>
+      <h2 class="doc-title">Wie KI die Arbeit unterstützen kann</h2>
+      <p class="doc-desc">Zerlegt KI-Use-Cases in ihre Teilaufgaben und hilft, die Fähigkeiten von KI differenziert zu besprechen.</p>
+      <span class="doc-arrow">
+        Öffnen
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </a>
+
+    <a class="doc-card doc-card--heuristiken" href="heuristiken-ki-gestaltung.html">
+      <p class="doc-tag">Gestaltungsprinzipien</p>
+      <h2 class="doc-title">Heuristiken für die Gestaltung von KI-Lösungen</h2>
+      <p class="doc-desc">Leitlinien und Prinzipien für den durchdachten Einsatz von KI in Organisationskontexten.</p>
+      <span class="doc-arrow">
+        Öffnen
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </a>
+
+  </div>
+</main>
+
+<footer style="margin-top:64px;">
+  <div class="wrap foot-inner">
+    <div class="foot-meta">
+      <span>made with <span class="heart">♥</span> in Bochum</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
