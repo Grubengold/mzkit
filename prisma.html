@@ -26,6 +26,7 @@
     --c-mt:       #6C8C4E;
     --c-to:       #B87A3E;
     --c-mo:       #8A5E8C;
+    --c-zentrum:  #5C4A3A;
   }
 
   * { box-sizing: border-box; }
@@ -97,6 +98,10 @@
   .focus-title { font-size: clamp(19px,2.1vw,24px); font-weight: 700; margin: 6px 0 14px 0; transition: color .3s ease; line-height: 1.25; }
   .focus-text p { font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 12px 0; }
   .focus-text b { font-family: var(--grain-mono); font-size: 10.5px; letter-spacing:.06em; text-transform:uppercase; color: var(--ink); display:block; margin-bottom: 3px; font-weight:600; }
+  .triade { margin-top: 6px; padding-top: 14px; border-top: 1px solid var(--ink-faint); }
+  .triade p { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.55; color: var(--ink-soft); margin: 0 0 10px 0; }
+  .triade p:last-child { margin-bottom: 0; }
+  .tri-sym { flex: 0 0 18px; font-size: 15px; line-height: 1.5; color: var(--ink-faint); text-align: center; }
 
   /* ---------- right scroll list ---------- */
   .right { width: 58%; position: relative; overflow: hidden; }
@@ -129,15 +134,12 @@
   .row:hover { color: var(--ink); }
   .row.selected { color: var(--ink); font-weight: 600; }
 
-  .loop-mark {
-    text-align: left;
-    color: var(--ink-faint);
-    opacity: .55;
-    font-family: var(--grain-mono);
-    font-size: 18px;
-    padding: 18px 0;
-    letter-spacing: .1em;
-    user-select: none;
+  .loop-divider {
+    height: 1px;
+    background: var(--ink-faint);
+    opacity: .35;
+    margin: 26px 0;
+    width: 100%;
   }
 
   .titleblock { position:fixed; z-index:4; right:44px; bottom:22px; font-family:var(--grain-mono); font-size:10px; color:var(--ink-faint); text-align:right; line-height:1.7; }
@@ -173,7 +175,8 @@
           <line id="underline-tech" class="tri-underline" x1="108" y1="13" x2="192" y2="13" />
           <line id="underline-mensch" class="tri-underline" x1="4" y1="231" x2="70" y2="231" />
           <line id="underline-org" class="tri-underline" x1="182" y1="231" x2="296" y2="231" />
-          <text class="tri-node" x="150" y="133" text-anchor="middle">Job</text>
+          <text id="node-job" class="tri-node" x="150" y="133" text-anchor="middle">Job</text>
+          <line id="underline-job" class="tri-underline" x1="138" y1="140" x2="162" y2="140" />
         </svg>
       </div>
       <div class="focus-readout" id="focus-readout">
@@ -196,6 +199,7 @@
 
   <script>
 const GROUP_META = {
+  zentrum:{ label: "Arbeitsaufgabe",             color: "var(--c-zentrum)",node: "node-job",    underline: "underline-job" },
   tech:   { label: "Technologie",               color: "var(--c-tech)",   node: "node-tech",   underline: "underline-tech" },
   mensch: { label: "Mensch",                    color: "var(--c-mensch)", node: "node-mensch", underline: "underline-mensch" },
   org:    { label: "Organisation",               color: "var(--c-org)",    node: "node-org",    underline: "underline-org" },
@@ -205,63 +209,84 @@ const GROUP_META = {
 };
 
 const ITEMS = [
-  {g:"tech", t:"Daten",
-    kern:"Qualität, Verfügbarkeit, Zugänglichkeit und Anschlussfähigkeit über Bereichsgrenzen hinweg."},
-  {g:"tech", t:"Modelle & Stack",
-    kern:"Modelle, Werkzeuge, Plattform — und das Wissen über deren Leistungsprofil und dessen Grenzen."},
-  {g:"tech", t:"Technische Sicherheit & Robustheit",
-    kern:"Datenschutz by design, Ausfallverhalten, Verhalten an den Rändern der Leistungsfähigkeit."},
-  {g:"tech", t:"Modularität",
-    kern:"Ob sich Komponenten austauschen lassen. Die technische Voraussetzung dafür, dass Entscheidungen revidierbar bleiben."},
-
-  {g:"to", t:"Verortung von KI-Systemen",
-    kern:"Wo KI-Systeme und Agenten in Prozessen und Struktur tatsächlich sitzen: als Werkzeug, als Prozessschritt, als Knoten im Organigramm. Wer ihre Arbeit beauftragt, prüft, eskaliert. (Wie sich die Struktur selbst verändert, ist Aufbauorganisation.)"},
-  {g:"to", t:"Regulatorische Konformität & Nachweisbarkeit",
-    kern:"Ob technisch möglich ist, was organisational gefordert wird: Dokumentation, Protokollierung, Auskunftsfähigkeit. Compliance ist weder reines Technikthema noch reines Regelthema."},
-  {g:"to", t:"Anbieterabhängigkeit",
-    kern:"Ob Beschaffungsentscheidungen Wechselfähigkeit erhalten oder verspielen. Die organisationale Seite der Modularität."},
-
-  {g:"org", t:"Strategie & Leitplanken",
-    kern:"Wofür KI da ist, was sie übernehmen soll und was bewusst nicht. Wofür gewonnene Freiräume genutzt werden. Leitplanken sind generische, fallunabhängige Grenzen (z. B. „keine KI bei Personalentscheidungen“) — zu unterscheiden von den fallspezifischen Gestaltungsprinzipien der Heuristiken."},
-  {g:"org", t:"Governance",
-    kern:"Formale Zuständigkeiten, Gremien, Freigabewege, Eskalationslogik. Wer darf was entscheiden, und wer haftet formal für Ergebnisse."},
-  {g:"org", t:"Aufbauorganisation",
-    kern:"Struktur: Hierarchietiefe, Zuschnitt und Zusammenspiel von Einheiten, Zentralisierungsgrad — und wie sich diese Struktur verändert, weil KI da ist."},
-  {g:"org", t:"Prozesse",
-    kern:"Wie Arbeit fließt: Abläufe, Übergaben, Schnittstellenzahl, Qualitätssicherungspunkte."},
-  {g:"org", t:"Anreiz- & Bewertungssysteme",
-    kern:"Wofür belohnt wird — Nutzung oder Wertbeitrag, Output oder Ergebnis. Wie Leistung gemessen wird, wenn KI mitproduziert."},
-  {g:"org", t:"Lernprozesse",
-    kern:"Formale Mechanismen der Weiterentwicklung: Feedbackwege aus der Praxis in Entscheidungen, Experimentierräume, systematische Auswertung, Abbruchfähigkeit von Initiativen. Die organisationale Seite dessen, was Lernfähigkeit individuell leistet."},
-  {g:"org", t:"Beteiligung & Transparenz",
-    kern:"Wie die Organisation ihre Mitglieder einbezieht und wie offen sie über Absichten spricht: Mitwirkungsrechte, Beteiligungsformate, Klarheit über das, was geplant ist — auch bei unbequemen Fragen."},
-
-  {g:"mo", t:"Rollen",
-    kern:"Rollenklarheit in der hybriden Zusammenarbeit — und ob die Zuschreibung von Verantwortung als fair erlebt wird, besonders dort, wo Menschen für Ergebnisse haften, die sie nur begrenzt kontrollieren."},
-  {g:"mo", t:"Autonomie",
-    kern:"Ob Arbeit Kontrolle und Entscheidungsspielraum behält, und wie algorithmische Steuerung und Leistungsmessung auf erlebte Autonomie wirken."},
-  {g:"mo", t:"Kultur",
-    kern:"Psychologische Sicherheit, Fehlertoleranz, Anerkennung. Ob offene KI-Nutzung sozial tragbar ist oder verdeckt stattfindet. Die informelle Seite der Organisation, wie sie bei den Menschen ankommt."},
-  {g:"mo", t:"Führung",
-    kern:"Führung als Kontextgestaltung statt operativer Einzelentscheidung: Orientierung geben, Reflexionsräume schaffen, Vorbildverhalten im eigenen KI-Einsatz."},
-  {g:"mo", t:"Menschliche Zusammenarbeit",
-    kern:"Ob Zusammenarbeit dort erhalten bleibt, wo aus ihr ein Mehrwert entsteht — Erfahrungsweitergabe, gemeinsames Urteil, fachliche Rückfrage — und ob Isolation durch überwiegende KI-Interaktion vermieden wird."},
-
+  {g:"zentrum", t:"Aufgabenzuschnitt",
+    kern:"Welche Aufgaben es gibt, wie sie gebündelt sind, ob sie ganzheitlich bleiben oder zu Restaufgaben zerfallen. Der Zuschnitt entscheidet, <em>was</em> die Aufgabe ist, bevor die Funktionsteilung (M × T) entscheidet, wer welchen Teil übernimmt.",
+    v:"Sind Aufgaben erfasst und beschrieben, bevor über KI entschieden wird?", w:"Entstehen ganze, sinnvolle Aufgaben, die Wert erzeugen, statt Restarbeit?", k:"Wird der Zuschnitt regelmäßig neu verhandelt, wenn sich Fähigkeiten verschieben?"},
+  {g:"zentrum", t:"Gelebtes Arbeitshandeln",
+    kern:"Was tatsächlich getan wird, nicht was vorgesehen ist: reale Nutzung, Prüfroutinen, Umgehungen, Schatten-Nutzung, Transparenz über eigenen KI-Einsatz. Anders als alle übrigen Subdimensionen ist dies kein Gestaltungsobjekt, sondern der Realitätstest: Hier liest man ab, ob der Rest des Rahmens trägt.",
+    v:"Gibt es Sichtbarkeit über die reale Nutzung?", w:"Zeigt das reale Handeln, dass Gestaltung angenommen wird, oder Umgehung?", k:"Fließen Beobachtungen aus der Praxis als Signal in die Anpassung des Rahmens?"},
   {g:"mensch", t:"Haltung",
-    kern:"Die grundsätzliche emotionale und bewertende Beziehung zur KI: Neugier oder Abwehr, Zuversicht oder Angst. Generelle Disposition — aufgabenbezogenes Vertrauen ist dagegen eine Frage der Urteilsfähigkeit und der Interaktionsgestaltung."},
+    kern:"Die grundsätzliche emotionale und bewertende Beziehung zur KI: Neugier oder Abwehr, Zuversicht oder Angst. Generelle Disposition; aufgabenbezogenes Vertrauen ist dagegen eine Frage der Urteilsfähigkeit und der Interaktionsgestaltung.",
+    v:"Ist Offenheit als Startbedingung da, sind Sorgen bekannt und aussprechbar?", w:"Trägt die Haltung produktive Nutzung, weder Verweigerung noch blinde Euphorie?", k:"Bleibt Offenheit über Enttäuschungen und Modellwechsel hinweg erhalten?"},
   {g:"mensch", t:"Kompetenz & Urteilsfähigkeit",
-    kern:"Verstehen, was KI kann und was nicht, und Ergebnisse fachlich beurteilen können. Das setzt fachliche Substanz voraus: Wer die Sache nicht versteht, kann den Output nicht prüfen."},
-  {g:"mensch", t:"Lernfähigkeit",
-    kern:"Die Fähigkeit und die Gewohnheit, mit technologischen Weiterentwicklungen mitzuwachsen. Meta-Kompetenz, nicht Fachwissen — die individuelle Seite dessen, was Lernprozesse auf Systemebene leisten."},
+    kern:"Verstehen, was KI kann und was nicht, und Ergebnisse fachlich beurteilen können. Das setzt fachliche Substanz voraus: Wer die Sache nicht versteht, kann den Output nicht prüfen. Eingeschlossen ist die Fähigkeit und die Gewohnheit, mit technologischen Weiterentwicklungen mitzuwachsen, die individuelle Seite dessen, was die Lernarchitektur (Organisation) auf Systemebene leistet.",
+    v:"Sind KI-Grundverständnis, fachliche Substanz sowie Zeit und Zugang zum Lernen vorhanden?", w:"Werden Outputs im Alltag tatsächlich beurteilt und korrigiert, und führt Lernen zu veränderter Praxis, nicht nur zu Zertifikaten?", k:"Wächst die Urteilsfähigkeit mit neuen Systemfähigkeiten mit statt zu erodieren, und ist Mitwachsen zur Gewohnheit geworden?"},
   {g:"mensch", t:"Berufliche Identität",
-    kern:"Die Frage nach dem eigenen Wertbeitrag, wenn Aufgaben und Fachwissen, die bisher Teil der beruflichen Selbstverständlichkeit waren, auch von KI geleistet werden. Verlangt Sinngebung, nicht Training."},
-
+    kern:"Die Frage nach dem eigenen Wertbeitrag, wenn Aufgaben und Fachwissen, die bisher Teil der beruflichen Selbstverständlichkeit waren, auch von KI geleistet werden. Verlangt Sinngebung, nicht Training.",
+    v:"Ist die Identitätsfrage anerkannt und hat sie Raum?", w:"Können Menschen ihren Wertbeitrag im neuen Zuschnitt sehen und ausfüllen?", k:"Können sich berufliche Selbstverständnisse mitentwickeln, statt an alten Rollenbildern zu brechen?"},
   {g:"mt", t:"Funktionsteilung",
-    kern:"Wer entscheidet, wer prüft, wer führt aus — die konkrete Aufteilung einer Aufgabe zwischen Person und System, nachdem der Aufgabenzuschnitt entschieden hat, was die Aufgabe ist. Ob der Mensch Akteur bleibt oder zum Restmonitor wird."},
+    kern:"Die konkrete Aufteilung einer Aufgabe zwischen Person und System, nachdem der Aufgabenzuschnitt (Zentrum) entschieden hat, was die Aufgabe ist: Wer entscheidet, wer prüft, wer führt aus. Ob der Mensch Akteur bleibt oder zum Restmonitor wird.",
+    v:"Ist die Teilung explizit entschieden statt gewachsen?", w:"Liegt das Urteil dort, wo es Wert stiftet, bleibt der Mensch Akteur?", k:"Wird die Teilung regelmäßig überprüft und verschoben, wenn sich die Fähigkeitsgrenze bewegt?"},
   {g:"mt", t:"Interaktionsgestaltung",
-    kern:"Ob im Zusammenspiel sichtbar wird, was das System kann, wo es unsicher ist, und ob Widerspruch und Korrektur im Ablauf vorgesehen sind."},
+    kern:"Die Gestaltung des unmittelbaren Zusammenspiels zwischen Person und System. Nutzer bilden ihr mentales Modell einer KI fast ausschließlich aus der Oberfläche: Wie souverän ein System formuliert, prägt die Erwartung an seine Verlässlichkeit stärker als jede Dokumentation. Interaktion ist deshalb kein Komfortthema, sondern der Ort, an dem realistische Erwartungen entstehen oder verhindert werden.",
+    v:"Sind Grenzen und Unsicherheit überhaupt sichtbar gemacht?", w:"Kalibriert der Umgang das Vertrauen, finden Widerspruch und Korrektur real statt?", k:"Wird die Gestaltung bei neuen Modellen neu geprüft und lernt sie aus Fehlern?"},
   {g:"mt", t:"Kognitiver Schutz",
-    kern:"Schutz in zwei Richtungen: vor kognitiver Belastung durch die KI-Nutzung selbst und vor dem Verlernen. Ob der Denkprozess dort geschützt wird, wo er das Wertvolle ist, und ob genug Eigenleistung erhalten bleibt."},
+    kern:"Schutz in zwei Richtungen: vor kognitiver Belastung durch die KI-Nutzung selbst und vor dem Verlernen. Ob der Denkprozess dort geschützt wird, wo er das Wertvolle ist, und ob genug Eigenleistung erhalten bleibt, damit Urteilsfähigkeit nicht erodiert.",
+    v:"Ist bekannt, welche Fähigkeiten erhalten bleiben müssen und wo Belastung entsteht?", w:"Ist Prüfen leistbar, überfordern Menge und Tiefe nicht?", k:"Bleibt Übung erhalten, damit künftige Beurteilung möglich bleibt?"},
+  {g:"tech", t:"Daten",
+    kern:"Die Informationsgrundlage, auf der KI überhaupt arbeiten kann. Daten sind der Teil der Technologie, der sich am wenigsten beschaffen lässt: Modelle kann man kaufen, die eigene Datenlage ist Ergebnis jahrelanger Praxis. Deshalb entscheidet sie meist vor jeder Werkzeugauswahl darüber, was möglich ist und was nicht.",
+    v:"Verfügbar, zugänglich, gut genug?", w:"Tragen die Daten die konkreten Anwendungsfälle?", k:"Wachsen Bestände und Qualität mit neuen Anforderungen mit, und fließen Nutzungssignale zurück?"},
+  {g:"tech", t:"Modelle & Stack",
+    kern:"Modelle, Werkzeuge und Plattform, das Wissen über deren Leistungsprofil und dessen Grenzen sowie die Austauschbarkeit der Bausteine. Modularität ist dabei keine Kür, sondern Konstruktionsanforderung: Nur wenn Komponenten hinter stabilen Abstraktionsschichten austauschbar bleiben, sind technische Entscheidungen revidierbar.",
+    v:"Ist eine passende Basis vorhanden, ihr Leistungsprofil bekannt und die Architektur in austauschbare Bausteine geschnitten?", w:"Leistet der Stack in den realen Aufgaben, was er soll, und ist ein Wechsel im Alltag ohne Großprojekt möglich?", k:"Wird das Leistungsprofil bei jedem Wechsel neu vermessen statt fortgeschrieben, und bleibt Austauschbarkeit über wachsende Integrationen hinweg erhalten? (Technikseitiger Ankerpunkt der K-Frage.)"},
+  {g:"tech", t:"Technische Sicherheit & Robustheit",
+    kern:"Wie sich das System verhält, wenn es nicht wie vorgesehen läuft. Gegenüber klassischer Software verschiebt sich der Schwerpunkt: Der harte Ausfall ist seltener das Problem als die plausibel aussehende Fehlleistung an den Rändern der Leistungsfähigkeit. Datenschutz gehört in die Konstruktion, nicht in die Abnahme.",
+    v:"Ist das Schutzniveau definiert und gebaut?", w:"Hält das System im Betrieb, auch an den Rändern?", k:"Werden neue Risiken neuer Modelle laufend bewertet, also Sicherheit als Prozess statt als Abnahme?"},
+  {g:"to", t:"Verortung von KI-Systemen",
+    kern:"Der strukturelle Status eines KI-Systems in der Organisation. Zwischen Werkzeug, Prozessschritt und eigenständigem Knoten liegen große Unterschiede in Zuständigkeit, Kontrolle und Erwartung, und der Status wird meist implizit vergeben, häufig über Sprache: Wer von einem Agenten als „Kollegen\" spricht, hat eine strukturelle Entscheidung getroffen, ohne sie zu treffen. (Wie sich die Struktur selbst verändert, ist Aufbauorganisation.)",
+    v:"Ist der Modus (Werkzeug, Prozessschritt, Knoten) pro System entschieden?", w:"Funktionieren Auftrag, Prüfung und Eskalation im Betrieb?", k:"Kann die Verortung wechseln, wenn Systeme fähiger werden, ohne Bruch?"},
+  {g:"to", t:"Regulatorische Konformität & Nachweisbarkeit",
+    kern:"Die Fähigkeit, das eigene KI-Handeln gegenüber Dritten zu belegen: Aufsicht, Kunden, Betriebsrat, Gericht. Diese Fähigkeit fällt nicht mit der Absicht zusammen, sondern muss technisch gebaut und organisational gepflegt werden. Weil sie nur entsteht, wenn beide Seiten dasselbe meinen, liegt sie an der Schnittstelle und nicht in einer Dimension.",
+    v:"Sind Anforderungen bekannt und ist Protokollierung technisch gebaut?", w:"Ist Auskunft real möglich und im Ernstfall erprobt?", k:"Passen sich Nachweise an neue Regeln und neue Systemklassen an?"},
+  {g:"to", t:"Anbieterabhängigkeit",
+    kern:"Ob Beschaffungsentscheidungen Wechselfähigkeit erhalten oder verspielen. Die organisationale Seite der technischen Austauschbarkeit (Modelle & Stack): technisch möglicher Wechsel nützt nichts, wenn Verträge und Integrationen ihn verhindern.",
+    v:"Sind Abhängigkeiten bekannt und dokumentiert?", w:"Tragen die Konditionen den Betrieb, ohne kritische Erpressbarkeit?", k:"Ist der Ausstieg real möglich, sodass die Abhängigkeit die Ko-Evolution nicht begrenzt?"},
+  {g:"org", t:"Strategie & Leitplanken",
+    kern:"Wofür KI da ist, was sie übernehmen soll und was bewusst nicht. Wofür gewonnene Freiräume genutzt werden. Leitplanken sind generische, fallunabhängige Grenzen (z. B. „keine KI bei Personalentscheidungen\"). Sie sind zu unterscheiden von den fallspezifischen Gestaltungsprinzipien der Heuristiken (Säule 2).",
+    v:"Sind Zweck und Tabus entschieden und bekannt?", w:"Ist die Reinvestition entschieden, erzeugen Gewinne Wert statt stiller Verdichtung?", k:"Werden Strategie und Leitplanken revidiert, wenn sich Fähigkeiten ändern?"},
+  {g:"org", t:"Governance",
+    kern:"Die formale Verfassung der Entscheidungsfindung: wer darf entscheiden, wer gibt frei, wer haftet. Bei KI wird das anspruchsvoller, weil Ergebnisse nicht deterministisch sind und der formal Zuständige oft nicht derjenige ist, der die Herleitung prüfen kann. Governance regelt die Papierlage; ob Zuständigkeit auch als tragbar erlebt wird, ist eine Frage der Rollen (O × M).",
+    v:"Ist Verantwortung benannt, sind Wege definiert?", w:"Wirken Gates vor der Wirkung, und fallen Entscheidungen zügig?", k:"Wird Governance mit neuen Systemklassen (z. B. Agenten) weiterentwickelt statt nur ergänzt?"},
+  {g:"org", t:"Aufbauorganisation",
+    kern:"Der Bauplan der Organisation: wie tief die Hierarchie reicht, wie Einheiten geschnitten sind, wie weit Information und Entscheidung voneinander entfernt liegen. Für die KI-Transformation ist die Struktur nicht der Behälter, in den Lösungen einsortiert werden, sondern selbst Gegenstand der Gestaltung, weil KI klassische Kontroll- und Aggregationsfunktionen verschiebt.",
+    v:"Ist die Struktur bekannt und als gestaltbar akzeptiert?", w:"Ermöglicht sie schnelle Entscheidungen dort, wo Kontextwissen sitzt?", k:"Verändert sich die Struktur selbst mit, die Organisation als Mitentwickelnde?"},
+  {g:"org", t:"Prozesse",
+    kern:"Der Weg, den Arbeit durch die Organisation nimmt. Für den KI-Einsatz zählt weniger, dass ein Ablauf schneller werden kann, als dass er anders geschnitten werden muss: KI verändert, wo Prüfpunkte sinnvoll liegen und wie viele Übergaben nötig sind. Ein unveränderter Ablauf beschleunigt mit KI auch seine Schwächen.",
+    v:"Sind Abläufe erfasst und Prüfschritte definiert?", w:"Erzeugen die Abläufe Qualität, nicht nur Geschwindigkeit?", k:"Werden Prozesse neu geschnitten, wenn sich die Funktionsteilung verschiebt?"},
+  {g:"org", t:"Anreiz- & Bewertungssysteme",
+    kern:"Die Signale, die der Organisation sagen, welches Verhalten sich lohnt. Sie wirken zuverlässiger als Appelle und Richtlinien und geraten beim KI-Einsatz leicht in Widerspruch zur Absicht: Messbar ist zuerst die Nutzung, wertvoll ist der Beitrag, und wo Menge belohnt wird, entsteht Menge.",
+    v:"Sind Messgrößen definiert, die Wertbeitrag erfassen können?", w:"Lohnt sich das richtige Verhalten tatsächlich?", k:"Werden Messgrößen angepasst, wenn KI-Anteile wachsen, statt alte Metriken fortzuschreiben?"},
+  {g:"org", t:"Lernarchitektur",
+    kern:"Der Apparat, mit dem die Organisation herausfindet, was funktioniert: Feedbackwege aus der Praxis in Entscheidungen, Experimentierräume, Testfälle und systematische Auswertung, Abbruchfähigkeit von Initiativen. Anders als Prozesse (wie Arbeit fließt) beschreibt die Lernarchitektur die Infrastruktur der Erkenntnisgewinnung. Die organisationale Seite dessen, was Kompetenz & Urteilsfähigkeit (Mensch) individuell leistet.",
+    v:"Existieren Testfälle, Experimentierräume und Auswertungswege?", w:"Erreichen Erkenntnisse die Entscheidungen, schnell genug?", k:"Lernt die Organisation systematisch aus jedem Zyklus?"},
+  {g:"org", t:"Beteiligung & Transparenz",
+    kern:"Der Zugang der Mitarbeitenden zu den Entscheidungen, die ihre Arbeit verändern, und die Offenheit der Organisation über ihre Absichten. Beides ist kein Stimmungsmanagement: Wer die Arbeit macht, weiß am genauesten, wo eine Lösung tragen wird, und ungeklärte Absichten werden nicht ignoriert, sondern durch Vermutungen ersetzt.",
+    v:"Existieren Mitwirkungswege, sind Absichten ausgesprochen?", w:"Verändert Beteiligung tatsächlich Lösungen, entsteht Vertrauen?", k:"Bleiben Menschen auch bei fortlaufender Veränderung einbezogen, nicht nur beim ersten Rollout?"},
+  {g:"mo", t:"Rollen",
+    kern:"Die Zuordnung von Zuständigkeit und Verantwortung zu Personen im hybriden Zusammenspiel. Entscheidend ist nicht allein, ob sie beschrieben ist, sondern ob sie zumutbar ist: Verantwortung setzt Kontrollmöglichkeit voraus, sonst wird die Rolle zum Haftungsort für Systemverhalten, das niemand steuert.",
+    v:"Sind Rollen beschrieben, einschließlich des KI-Bezugs?", w:"Kann prüfen, wer haftet, und wird die Zuschreibung als fair erlebt?", k:"Werden Rollen fortgeschrieben, wenn sich die Teilung verschiebt?"},
+  {g:"mo", t:"Autonomie",
+    kern:"Der Spielraum, in dem Menschen über ihr eigenes Vorgehen entscheiden. KI kann ihn erweitern, indem sie Routine abnimmt, oder verengen, indem sie Abläufe vorgibt und Verhalten messbar macht. Welche der beiden Wirkungen eintritt, ist eine Gestaltungsfrage und keine Eigenschaft der Technologie.",
+    v:"Sind Spielräume definiert, nicht nur behauptet?", w:"Entscheiden Menschen real über ihr Wie, ohne personenbezogene Überwachung?", k:"Bleibt Spielraum erhalten, wenn Systeme mehr können, oder frisst Automatisierung Autonomie?"},
+  {g:"mo", t:"Kultur",
+    kern:"Die ungeschriebenen Regeln, unter denen KI-Einsatz stattfindet. Sie entscheiden darüber, ob Unsicherheiten, Fehler und die eigene Nutzung besprechbar sind, und damit darüber, wie viel die Organisation über ihren tatsächlichen KI-Einsatz überhaupt erfährt. Die informelle Seite der Organisation, wie sie bei den Menschen ankommt.",
+    v:"Ist psychologische Sicherheit als Basis vorhanden?", w:"Sind offene Nutzung und Fehler real tragbar, wird deklariert?", k:"Trägt die Kultur wiederholte Veränderung, ohne zu ermüden?"},
+  {g:"mo", t:"Führung",
+    kern:"Die Rolle der Führungskraft in einem Wandel, der kein Zielbild hat. Wo Fachwissen an Exklusivität verliert und Entscheidungen algorithmisch vorbereitet werden, verschiebt sich Führung von der besseren Antwort zur Gestaltung des Kontexts, in dem Antworten entstehen und geprüft werden.",
+    v:"Ist die erweiterte Führungsaufgabe definiert und legitimiert?", w:"Gibt Führung real Orientierung, und ist das Vorbild sichtbar?", k:"Hält Führung die Neuverhandlung offen, z. B. durch wiederkehrende Aufgabenteilungs-Runden?"},
+  {g:"mo", t:"Menschliche Zusammenarbeit",
+    kern:"Der Anteil der Arbeit, dessen Wert in der Abstimmung zwischen Menschen liegt: Erfahrungsweitergabe, gemeinsames Urteil, fachliche Rückfrage. Dieser Anteil verschwindet selten durch Entscheidung, sondern durch das Ausbleiben von Anlässen, weil die KI-Antwort schneller verfügbar ist als die Kollegin.",
+    v:"Ist identifiziert, wo Zusammenarbeit Mehrwert stiftet?", w:"Findet sie dort tatsächlich statt, wird Isolation bemerkt?", k:"Bleibt Erfahrungsweitergabe erhalten, die soziale Bedingung künftiger Fähigkeit?"},
 ];
 
 const N = ITEMS.length;
@@ -299,8 +324,7 @@ for (let copy = 0; copy < 3; copy++) {
   blockEls.push(block);
 
   const mark = document.createElement('div');
-  mark.className = 'loop-mark';
-  mark.textContent = '∞';
+  mark.className = 'loop-divider';
   listEl.appendChild(mark);
 }
 
@@ -331,6 +355,11 @@ function selectItem(index) {
   document.getElementById('focus-title').style.color = meta.color;
   document.getElementById('focus-text').innerHTML = `
     <p>${item.kern}</p>
+    <div class="triade">
+      <p><span class="tri-sym">▬</span>${item.v}</p>
+      <p><span class="tri-sym">◈</span>${item.w}</p>
+      <p><span class="tri-sym">∞</span>${item.k}</p>
+    </div>
   `;
   focusReadoutEl.scrollTop = 0;
 
