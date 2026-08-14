@@ -153,6 +153,68 @@
     .right { width: 100%; height: 52vh; }
     .titleblock { display:none; }
   }
+
+  /* ---------- Konfigurations-Panel ---------- */
+  .config-toggle {
+    position: fixed; z-index: 20; right: 20px; bottom: 20px;
+    font-family: var(--grain-mono); font-size: 11px; letter-spacing:.06em;
+    background: var(--ink); color: #fff; border: none; border-radius: 20px;
+    padding: 8px 16px; cursor: pointer; opacity: .85;
+  }
+  .config-toggle:hover { opacity: 1; }
+
+  .config-backdrop {
+    position: fixed; inset: 0; z-index: 30;
+    background: rgba(42,29,22,0.45);
+    display: flex; align-items: center; justify-content: center;
+    padding: 30px;
+  }
+
+  .config-panel {
+    background: #fff; width: min(760px, 100%); max-height: 88vh;
+    border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .config-head {
+    padding: 20px 26px 14px 26px; border-bottom: 1px solid var(--ink-faint);
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .config-head h2 { margin: 0; font-size: 16px; font-weight: 700; }
+  .config-head p { margin: 4px 0 0 0; font-size: 12.5px; color: var(--ink-soft); }
+  .config-close {
+    background: none; border: none; font-size: 18px; cursor: pointer; color: var(--ink-soft); line-height: 1;
+  }
+  .config-body { padding: 12px 26px; overflow-y: auto; flex: 1 1 auto; }
+  .config-group-label {
+    font-family: var(--grain-mono); font-size: 10.5px; letter-spacing:.1em; text-transform:uppercase;
+    margin: 16px 0 6px 0; font-weight: 600;
+  }
+  .config-group-label:first-child { margin-top: 6px; }
+  .config-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 13.5px; }
+  .config-row label { cursor: pointer; }
+  .config-actions { display: flex; gap: 10px; margin: 10px 0 4px 0; }
+  .config-actions button {
+    font-family: var(--grain-mono); font-size: 10.5px; letter-spacing:.06em;
+    background: #F2ECE3; border: 1px solid var(--ink-faint); border-radius: 14px;
+    padding: 4px 12px; cursor: pointer; color: var(--ink);
+  }
+  .config-actions button:hover { background: #E7E0D3; }
+  .config-foot {
+    padding: 14px 26px 20px 26px; border-top: 1px solid var(--ink-faint);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .config-foot-label { font-family: var(--grain-mono); font-size: 10.5px; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); }
+  .config-link-row { display: flex; gap: 8px; }
+  .config-link-row input {
+    flex: 1 1 auto; font-family: var(--grain-mono); font-size: 12px; padding: 8px 10px;
+    border: 1px solid var(--ink-faint); border-radius: 6px; background: #FAF7F2; color: var(--ink);
+  }
+  .config-link-row button {
+    font-family: var(--grain-mono); font-size: 11px; letter-spacing:.04em;
+    background: var(--ink); color: #fff; border: none; border-radius: 6px;
+    padding: 0 16px; cursor: pointer; white-space: nowrap;
+  }
+  .config-link-row button.copied { background: var(--c-mt); }
 </style>
 </head>
 <body>
@@ -193,7 +255,7 @@
 
   <div class="titleblock">
     Grubengold · Menschenzentrierte KI-Transformation<br>
-    Made with ♥ in Bochum · v0.2 · Stand August 2026<br>
+    Made with ♥ in Bochum · v0.3 · Stand August 2026<br>
     <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" style="color:inherit;">CC BY-SA 4.0</a> · Namensnennung: Grubengold
   </div>
 
@@ -208,86 +270,112 @@ const GROUP_META = {
   mo:     { label: "Mensch ∩ Organisation",      color: "var(--c-mo)",     edge: "edge-mo", nodes: ["node-mensch", "node-org"] },
 };
 
-const ITEMS = [
-  {g:"zentrum", t:"Aufgabenzuschnitt",
+const ITEMS_FULL = [
+  {sid:1, g:"zentrum", t:"Aufgabenzuschnitt",
     kern:"Welche Aufgaben es gibt, wie sie gebündelt sind, ob sie ganzheitlich bleiben oder zu Restaufgaben zerfallen. Der Zuschnitt entscheidet, <em>was</em> die Aufgabe ist, bevor die Funktionsteilung (M × T) entscheidet, wer welchen Teil übernimmt.",
     v:"Sind Aufgaben erfasst und beschrieben, bevor über KI entschieden wird?", w:"Entstehen ganze, sinnvolle Aufgaben, die Wert erzeugen, statt Restarbeit?", k:"Wird der Zuschnitt regelmäßig neu verhandelt, wenn sich Fähigkeiten verschieben?"},
-  {g:"zentrum", t:"Gelebtes Arbeitshandeln",
+  {sid:2, g:"zentrum", t:"Gelebtes Arbeitshandeln",
     kern:"Was tatsächlich getan wird, nicht was vorgesehen ist: reale Nutzung, Prüfroutinen, Umgehungen, Schatten-Nutzung, Transparenz über eigenen KI-Einsatz. Anders als alle übrigen Subdimensionen ist dies kein Gestaltungsobjekt, sondern der Realitätstest: Hier liest man ab, ob der Rest des Rahmens trägt.",
     v:"Gibt es Sichtbarkeit über die reale Nutzung?", w:"Zeigt das reale Handeln, dass Gestaltung angenommen wird, oder Umgehung?", k:"Fließen Beobachtungen aus der Praxis als Signal in die Anpassung des Rahmens?"},
-  {g:"mensch", t:"Haltung",
+  {sid:3, g:"mensch", t:"Haltung",
     kern:"Die grundsätzliche emotionale und bewertende Beziehung zur KI: Neugier oder Abwehr, Zuversicht oder Angst. Generelle Disposition; aufgabenbezogenes Vertrauen ist dagegen eine Frage der Urteilsfähigkeit und der Interaktionsgestaltung.",
     v:"Ist Offenheit als Startbedingung da, sind Sorgen bekannt und aussprechbar?", w:"Trägt die Haltung produktive Nutzung, weder Verweigerung noch blinde Euphorie?", k:"Bleibt Offenheit über Enttäuschungen und Modellwechsel hinweg erhalten?"},
-  {g:"mensch", t:"Kompetenz & Urteilsfähigkeit",
+  {sid:4, g:"mensch", t:"Kompetenz & Urteilsfähigkeit",
     kern:"Verstehen, was KI kann und was nicht, und Ergebnisse fachlich beurteilen können. Das setzt fachliche Substanz voraus: Wer die Sache nicht versteht, kann den Output nicht prüfen. Eingeschlossen ist die Fähigkeit und die Gewohnheit, mit technologischen Weiterentwicklungen mitzuwachsen, die individuelle Seite dessen, was die Lernarchitektur (Organisation) auf Systemebene leistet.",
     v:"Sind KI-Grundverständnis, fachliche Substanz sowie Zeit und Zugang zum Lernen vorhanden?", w:"Werden Outputs im Alltag tatsächlich beurteilt und korrigiert, und führt Lernen zu veränderter Praxis, nicht nur zu Zertifikaten?", k:"Wächst die Urteilsfähigkeit mit neuen Systemfähigkeiten mit statt zu erodieren, und ist Mitwachsen zur Gewohnheit geworden?"},
-  {g:"mensch", t:"Berufliche Identität",
+  {sid:5, g:"mensch", t:"Berufliche Identität",
     kern:"Die Frage nach dem eigenen Wertbeitrag, wenn Aufgaben und Fachwissen, die bisher Teil der beruflichen Selbstverständlichkeit waren, auch von KI geleistet werden. Verlangt Sinngebung, nicht Training.",
     v:"Ist die Identitätsfrage anerkannt und hat sie Raum?", w:"Können Menschen ihren Wertbeitrag im neuen Zuschnitt sehen und ausfüllen?", k:"Können sich berufliche Selbstverständnisse mitentwickeln, statt an alten Rollenbildern zu brechen?"},
-  {g:"mt", t:"Funktionsteilung",
+  {sid:6, g:"mt", t:"Funktionsteilung",
     kern:"Die konkrete Aufteilung einer Aufgabe zwischen Person und System, nachdem der Aufgabenzuschnitt (Zentrum) entschieden hat, was die Aufgabe ist: Wer entscheidet, wer prüft, wer führt aus. Ob der Mensch Akteur bleibt oder zum Restmonitor wird.",
     v:"Ist die Teilung explizit entschieden statt gewachsen?", w:"Liegt das Urteil dort, wo es Wert stiftet, bleibt der Mensch Akteur?", k:"Wird die Teilung regelmäßig überprüft und verschoben, wenn sich die Fähigkeitsgrenze bewegt?"},
-  {g:"mt", t:"Interaktionsgestaltung",
+  {sid:7, g:"mt", t:"Interaktionsgestaltung",
     kern:"Die Gestaltung des unmittelbaren Zusammenspiels zwischen Person und System. Nutzer bilden ihr mentales Modell einer KI fast ausschließlich aus der Oberfläche: Wie souverän ein System formuliert, prägt die Erwartung an seine Verlässlichkeit stärker als jede Dokumentation. Interaktion ist deshalb kein Komfortthema, sondern der Ort, an dem realistische Erwartungen entstehen oder verhindert werden.",
     v:"Sind Grenzen und Unsicherheit überhaupt sichtbar gemacht?", w:"Kalibriert der Umgang das Vertrauen, finden Widerspruch und Korrektur real statt?", k:"Wird die Gestaltung bei neuen Modellen neu geprüft und lernt sie aus Fehlern?"},
-  {g:"mt", t:"Kognitiver Schutz",
+  {sid:8, g:"mt", t:"Kognitiver Schutz",
     kern:"Schutz in zwei Richtungen: vor kognitiver Belastung durch die KI-Nutzung selbst und vor dem Verlernen. Ob der Denkprozess dort geschützt wird, wo er das Wertvolle ist, und ob genug Eigenleistung erhalten bleibt, damit Urteilsfähigkeit nicht erodiert.",
     v:"Ist bekannt, welche Fähigkeiten erhalten bleiben müssen und wo Belastung entsteht?", w:"Ist Prüfen leistbar, überfordern Menge und Tiefe nicht?", k:"Bleibt Übung erhalten, damit künftige Beurteilung möglich bleibt?"},
-  {g:"tech", t:"Daten",
+  {sid:9, g:"tech", t:"Daten",
     kern:"Die Informationsgrundlage, auf der KI überhaupt arbeiten kann. Daten sind der Teil der Technologie, der sich am wenigsten beschaffen lässt: Modelle kann man kaufen, die eigene Datenlage ist Ergebnis jahrelanger Praxis. Deshalb entscheidet sie meist vor jeder Werkzeugauswahl darüber, was möglich ist und was nicht.",
     v:"Verfügbar, zugänglich, gut genug?", w:"Tragen die Daten die konkreten Anwendungsfälle?", k:"Wachsen Bestände und Qualität mit neuen Anforderungen mit, und fließen Nutzungssignale zurück?"},
-  {g:"tech", t:"Modelle & Stack",
+  {sid:10, g:"tech", t:"Modelle & Stack",
     kern:"Modelle, Werkzeuge und Plattform, das Wissen über deren Leistungsprofil und dessen Grenzen sowie die Austauschbarkeit der Bausteine. Modularität ist dabei keine Kür, sondern Konstruktionsanforderung: Nur wenn Komponenten hinter stabilen Abstraktionsschichten austauschbar bleiben, sind technische Entscheidungen revidierbar.",
     v:"Ist eine passende Basis vorhanden, ihr Leistungsprofil bekannt und die Architektur in austauschbare Bausteine geschnitten?", w:"Leistet der Stack in den realen Aufgaben, was er soll, und ist ein Wechsel im Alltag ohne Großprojekt möglich?", k:"Wird das Leistungsprofil bei jedem Wechsel neu vermessen statt fortgeschrieben, und bleibt Austauschbarkeit über wachsende Integrationen hinweg erhalten? (Technikseitiger Ankerpunkt der K-Frage.)"},
-  {g:"tech", t:"Technische Sicherheit & Robustheit",
+  {sid:11, g:"tech", t:"Technische Sicherheit & Robustheit",
     kern:"Wie sich das System verhält, wenn es nicht wie vorgesehen läuft. Gegenüber klassischer Software verschiebt sich der Schwerpunkt: Der harte Ausfall ist seltener das Problem als die plausibel aussehende Fehlleistung an den Rändern der Leistungsfähigkeit. Datenschutz gehört in die Konstruktion, nicht in die Abnahme.",
     v:"Ist das Schutzniveau definiert und gebaut?", w:"Hält das System im Betrieb, auch an den Rändern?", k:"Werden neue Risiken neuer Modelle laufend bewertet, also Sicherheit als Prozess statt als Abnahme?"},
-  {g:"to", t:"Verortung von KI-Systemen",
+  {sid:12, g:"to", t:"Verortung von KI-Systemen",
     kern:"Der strukturelle Status eines KI-Systems in der Organisation. Zwischen Werkzeug, Prozessschritt und eigenständigem Knoten liegen große Unterschiede in Zuständigkeit, Kontrolle und Erwartung, und der Status wird meist implizit vergeben, häufig über Sprache: Wer von einem Agenten als „Kollegen\" spricht, hat eine strukturelle Entscheidung getroffen, ohne sie zu treffen. (Wie sich die Struktur selbst verändert, ist Aufbauorganisation.)",
     v:"Ist der Modus (Werkzeug, Prozessschritt, Knoten) pro System entschieden?", w:"Funktionieren Auftrag, Prüfung und Eskalation im Betrieb?", k:"Kann die Verortung wechseln, wenn Systeme fähiger werden, ohne Bruch?"},
-  {g:"to", t:"Regulatorische Konformität & Nachweisbarkeit",
+  {sid:13, g:"to", t:"Regulatorische Konformität & Nachweisbarkeit",
     kern:"Die Fähigkeit, das eigene KI-Handeln gegenüber Dritten zu belegen: Aufsicht, Kunden, Betriebsrat, Gericht. Diese Fähigkeit fällt nicht mit der Absicht zusammen, sondern muss technisch gebaut und organisational gepflegt werden. Weil sie nur entsteht, wenn beide Seiten dasselbe meinen, liegt sie an der Schnittstelle und nicht in einer Dimension.",
     v:"Sind Anforderungen bekannt und ist Protokollierung technisch gebaut?", w:"Ist Auskunft real möglich und im Ernstfall erprobt?", k:"Passen sich Nachweise an neue Regeln und neue Systemklassen an?"},
-  {g:"to", t:"Anbieterabhängigkeit",
+  {sid:14, g:"to", t:"Anbieterabhängigkeit",
     kern:"Ob Beschaffungsentscheidungen Wechselfähigkeit erhalten oder verspielen. Die organisationale Seite der technischen Austauschbarkeit (Modelle & Stack): technisch möglicher Wechsel nützt nichts, wenn Verträge und Integrationen ihn verhindern.",
     v:"Sind Abhängigkeiten bekannt und dokumentiert?", w:"Tragen die Konditionen den Betrieb, ohne kritische Erpressbarkeit?", k:"Ist der Ausstieg real möglich, sodass die Abhängigkeit die Ko-Evolution nicht begrenzt?"},
-  {g:"org", t:"Strategie & Leitplanken",
+  {sid:15, g:"org", t:"Strategie & Leitplanken",
     kern:"Wofür KI da ist, was sie übernehmen soll und was bewusst nicht. Wofür gewonnene Freiräume genutzt werden. Leitplanken sind generische, fallunabhängige Grenzen (z. B. „keine KI bei Personalentscheidungen\"). Sie sind zu unterscheiden von den fallspezifischen Gestaltungsprinzipien der Heuristiken (Säule 2).",
     v:"Sind Zweck und Tabus entschieden und bekannt?", w:"Ist die Reinvestition entschieden, erzeugen Gewinne Wert statt stiller Verdichtung?", k:"Werden Strategie und Leitplanken revidiert, wenn sich Fähigkeiten ändern?"},
-  {g:"org", t:"Governance",
+  {sid:16, g:"org", t:"Governance",
     kern:"Die formale Verfassung der Entscheidungsfindung: wer darf entscheiden, wer gibt frei, wer haftet. Bei KI wird das anspruchsvoller, weil Ergebnisse nicht deterministisch sind und der formal Zuständige oft nicht derjenige ist, der die Herleitung prüfen kann. Governance regelt die Papierlage; ob Zuständigkeit auch als tragbar erlebt wird, ist eine Frage der Rollen (O × M).",
     v:"Ist Verantwortung benannt, sind Wege definiert?", w:"Wirken Gates vor der Wirkung, und fallen Entscheidungen zügig?", k:"Wird Governance mit neuen Systemklassen (z. B. Agenten) weiterentwickelt statt nur ergänzt?"},
-  {g:"org", t:"Aufbauorganisation",
+  {sid:17, g:"org", t:"Aufbauorganisation",
     kern:"Der Bauplan der Organisation: wie tief die Hierarchie reicht, wie Einheiten geschnitten sind, wie weit Information und Entscheidung voneinander entfernt liegen. Für die KI-Transformation ist die Struktur nicht der Behälter, in den Lösungen einsortiert werden, sondern selbst Gegenstand der Gestaltung, weil KI klassische Kontroll- und Aggregationsfunktionen verschiebt.",
     v:"Ist die Struktur bekannt und als gestaltbar akzeptiert?", w:"Ermöglicht sie schnelle Entscheidungen dort, wo Kontextwissen sitzt?", k:"Verändert sich die Struktur selbst mit, die Organisation als Mitentwickelnde?"},
-  {g:"org", t:"Prozesse",
+  {sid:18, g:"org", t:"Prozesse",
     kern:"Der Weg, den Arbeit durch die Organisation nimmt. Für den KI-Einsatz zählt weniger, dass ein Ablauf schneller werden kann, als dass er anders geschnitten werden muss: KI verändert, wo Prüfpunkte sinnvoll liegen und wie viele Übergaben nötig sind. Ein unveränderter Ablauf beschleunigt mit KI auch seine Schwächen.",
     v:"Sind Abläufe erfasst und Prüfschritte definiert?", w:"Erzeugen die Abläufe Qualität, nicht nur Geschwindigkeit?", k:"Werden Prozesse neu geschnitten, wenn sich die Funktionsteilung verschiebt?"},
-  {g:"org", t:"Anreiz- & Bewertungssysteme",
+  {sid:19, g:"org", t:"Anreiz- & Bewertungssysteme",
     kern:"Die Signale, die der Organisation sagen, welches Verhalten sich lohnt. Sie wirken zuverlässiger als Appelle und Richtlinien und geraten beim KI-Einsatz leicht in Widerspruch zur Absicht: Messbar ist zuerst die Nutzung, wertvoll ist der Beitrag, und wo Menge belohnt wird, entsteht Menge.",
     v:"Sind Messgrößen definiert, die Wertbeitrag erfassen können?", w:"Lohnt sich das richtige Verhalten tatsächlich?", k:"Werden Messgrößen angepasst, wenn KI-Anteile wachsen, statt alte Metriken fortzuschreiben?"},
-  {g:"org", t:"Lernarchitektur",
+  {sid:20, g:"org", t:"Lernarchitektur",
     kern:"Der Apparat, mit dem die Organisation herausfindet, was funktioniert: Feedbackwege aus der Praxis in Entscheidungen, Experimentierräume, Testfälle und systematische Auswertung, Abbruchfähigkeit von Initiativen. Anders als Prozesse (wie Arbeit fließt) beschreibt die Lernarchitektur die Infrastruktur der Erkenntnisgewinnung. Die organisationale Seite dessen, was Kompetenz & Urteilsfähigkeit (Mensch) individuell leistet.",
     v:"Existieren Testfälle, Experimentierräume und Auswertungswege?", w:"Erreichen Erkenntnisse die Entscheidungen, schnell genug?", k:"Lernt die Organisation systematisch aus jedem Zyklus?"},
-  {g:"org", t:"Beteiligung & Transparenz",
+  {sid:21, g:"org", t:"Beteiligung & Transparenz",
     kern:"Der Zugang der Mitarbeitenden zu den Entscheidungen, die ihre Arbeit verändern, und die Offenheit der Organisation über ihre Absichten. Beides ist kein Stimmungsmanagement: Wer die Arbeit macht, weiß am genauesten, wo eine Lösung tragen wird, und ungeklärte Absichten werden nicht ignoriert, sondern durch Vermutungen ersetzt.",
     v:"Existieren Mitwirkungswege, sind Absichten ausgesprochen?", w:"Verändert Beteiligung tatsächlich Lösungen, entsteht Vertrauen?", k:"Bleiben Menschen auch bei fortlaufender Veränderung einbezogen, nicht nur beim ersten Rollout?"},
-  {g:"mo", t:"Rollen",
+  {sid:22, g:"mo", t:"Rollen",
     kern:"Die Zuordnung von Zuständigkeit und Verantwortung zu Personen im hybriden Zusammenspiel. Entscheidend ist nicht allein, ob sie beschrieben ist, sondern ob sie zumutbar ist: Verantwortung setzt Kontrollmöglichkeit voraus, sonst wird die Rolle zum Haftungsort für Systemverhalten, das niemand steuert.",
     v:"Sind Rollen beschrieben, einschließlich des KI-Bezugs?", w:"Kann prüfen, wer haftet, und wird die Zuschreibung als fair erlebt?", k:"Werden Rollen fortgeschrieben, wenn sich die Teilung verschiebt?"},
-  {g:"mo", t:"Autonomie",
+  {sid:23, g:"mo", t:"Autonomie",
     kern:"Der Spielraum, in dem Menschen über ihr eigenes Vorgehen entscheiden. KI kann ihn erweitern, indem sie Routine abnimmt, oder verengen, indem sie Abläufe vorgibt und Verhalten messbar macht. Welche der beiden Wirkungen eintritt, ist eine Gestaltungsfrage und keine Eigenschaft der Technologie.",
     v:"Sind Spielräume definiert, nicht nur behauptet?", w:"Entscheiden Menschen real über ihr Wie, ohne personenbezogene Überwachung?", k:"Bleibt Spielraum erhalten, wenn Systeme mehr können, oder frisst Automatisierung Autonomie?"},
-  {g:"mo", t:"Kultur",
+  {sid:24, g:"mo", t:"Kultur",
     kern:"Die ungeschriebenen Regeln, unter denen KI-Einsatz stattfindet. Sie entscheiden darüber, ob Unsicherheiten, Fehler und die eigene Nutzung besprechbar sind, und damit darüber, wie viel die Organisation über ihren tatsächlichen KI-Einsatz überhaupt erfährt. Die informelle Seite der Organisation, wie sie bei den Menschen ankommt.",
     v:"Ist psychologische Sicherheit als Basis vorhanden?", w:"Sind offene Nutzung und Fehler real tragbar, wird deklariert?", k:"Trägt die Kultur wiederholte Veränderung, ohne zu ermüden?"},
-  {g:"mo", t:"Führung",
+  {sid:25, g:"mo", t:"Führung",
     kern:"Die Rolle der Führungskraft in einem Wandel, der kein Zielbild hat. Wo Fachwissen an Exklusivität verliert und Entscheidungen algorithmisch vorbereitet werden, verschiebt sich Führung von der besseren Antwort zur Gestaltung des Kontexts, in dem Antworten entstehen und geprüft werden.",
     v:"Ist die erweiterte Führungsaufgabe definiert und legitimiert?", w:"Gibt Führung real Orientierung, und ist das Vorbild sichtbar?", k:"Hält Führung die Neuverhandlung offen, z. B. durch wiederkehrende Aufgabenteilungs-Runden?"},
-  {g:"mo", t:"Menschliche Zusammenarbeit",
+  {sid:26, g:"mo", t:"Menschliche Zusammenarbeit",
     kern:"Der Anteil der Arbeit, dessen Wert in der Abstimmung zwischen Menschen liegt: Erfahrungsweitergabe, gemeinsames Urteil, fachliche Rückfrage. Dieser Anteil verschwindet selten durch Entscheidung, sondern durch das Ausbleiben von Anlässen, weil die KI-Antwort schneller verfügbar ist als die Kollegin.",
     v:"Ist identifiziert, wo Zusammenarbeit Mehrwert stiftet?", w:"Findet sie dort tatsächlich statt, wird Isolation bemerkt?", k:"Bleibt Erfahrungsweitergabe erhalten, die soziale Bedingung künftiger Fähigkeit?"},
 ];
+
+// --- Stabile IDs je Subdimension (aus dem Titel abgeleitet, überlebt Reihenfolge-Änderungen) ---
+function slugify(str) {
+  return str.toLowerCase()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+    .replace(/&/g,'und')
+    .normalize('NFKD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'');
+}
+ITEMS_FULL.forEach(item => { item.id = slugify(item.t); }); // lesbarer Slug, nur intern/zur Anzeige
+
+// --- URL-Parameter auswerten ---
+// Für den Link wird die kurze, stabile item.sid genutzt (fortlaufend vergeben,
+// siehe ITEMS_FULL oben — analog zur H-Nummerierung der Heuristiken: append-only,
+// keine Neuvergabe bei Umbenennung). Das hält Links kurz, unabhängig vom Titeltext.
+const urlParams = new URLSearchParams(location.search);
+const showParam = urlParams.get('show');
+const isConfigMode = urlParams.get('view') === 'config'; // Konfigurations-Panel erreichbar über ?view=config
+
+let ITEMS = ITEMS_FULL;
+if (showParam) {
+  const wanted = new Set(showParam.split(',').map(s => s.trim()).filter(Boolean));
+  const filtered = ITEMS_FULL.filter(item => wanted.has(String(item.sid)));
+  if (filtered.length > 0) ITEMS = filtered;
+}
 
 const N = ITEMS.length;
 const listEl = document.getElementById('list-scroll');
@@ -396,8 +484,111 @@ listEl.addEventListener('scroll', () => {
   }
 });
 
-window.addEventListener('load', () => { measure(); selectItem(0); });
+window.addEventListener('load', () => {
+  measure();
+  selectItem(0);
+  if (isConfigMode) buildConfigPanel();
+});
 window.addEventListener('resize', measure);
+
+// --- Konfigurations-Panel: Subdimensionen für einen Kunden-Link ein-/ausblenden ---
+function buildConfigPanel() {
+  const preselected = showParam
+    ? new Set(showParam.split(',').map(s => s.trim()).filter(Boolean))
+    : null; // null = alles an (Standard)
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'config-backdrop';
+
+  const panel = document.createElement('div');
+  panel.className = 'config-panel';
+  backdrop.appendChild(panel);
+
+  panel.innerHTML = `
+    <div class="config-head">
+      <div>
+        <h2>Ansicht konfigurieren — Subdimensionen für Link auswählen</h2>
+        <p>Auswahl treffen, dann unten den generierten Link kopieren. Diese Seite selbst bleibt immer vollständig.</p>
+      </div>
+      <button class="config-close" title="Schließen">✕</button>
+    </div>
+    <div class="config-body">
+      <div class="config-actions">
+        <button data-act="all">Alle auswählen</button>
+        <button data-act="none">Alle abwählen</button>
+      </div>
+      <div class="config-list"></div>
+    </div>
+    <div class="config-foot">
+      <div class="config-foot-label">Link für Kundengespräch</div>
+      <div class="config-link-row">
+        <input type="text" readonly id="config-link-output">
+        <button id="config-copy-btn">Kopieren</button>
+      </div>
+    </div>
+  `;
+
+  const listWrap = panel.querySelector('.config-list');
+  let lastGroup = null;
+  const checkboxes = [];
+
+  ITEMS_FULL.forEach(item => {
+    if (item.g !== lastGroup) {
+      lastGroup = item.g;
+      const label = document.createElement('div');
+      label.className = 'config-group-label';
+      label.textContent = GROUP_META[item.g].label;
+      label.style.color = GROUP_META[item.g].color;
+      listWrap.appendChild(label);
+    }
+    const row = document.createElement('div');
+    row.className = 'config-row';
+    const checked = preselected ? preselected.has(String(item.sid)) : true;
+    row.innerHTML = `<input type="checkbox" id="cb-${item.sid}" ${checked ? 'checked' : ''}><label for="cb-${item.sid}">${item.t}</label>`;
+    listWrap.appendChild(row);
+    checkboxes.push(row.querySelector('input'));
+  });
+
+  function currentBaseUrl() {
+    return location.origin + location.pathname;
+  }
+
+  function updateLink() {
+    const selected = ITEMS_FULL.filter((item, idx) => checkboxes[idx].checked);
+    const linkOutput = panel.querySelector('#config-link-output');
+    if (selected.length === ITEMS_FULL.length || selected.length === 0) {
+      linkOutput.value = currentBaseUrl();
+    } else {
+      linkOutput.value = currentBaseUrl() + '?show=' + selected.map(i => i.sid).join(',');
+    }
+    const copyBtn = panel.querySelector('#config-copy-btn');
+    copyBtn.textContent = 'Kopieren';
+    copyBtn.classList.remove('copied');
+  }
+
+  checkboxes.forEach(cb => cb.addEventListener('change', updateLink));
+
+  panel.querySelector('[data-act="all"]').addEventListener('click', () => {
+    checkboxes.forEach(cb => cb.checked = true);
+    updateLink();
+  });
+  panel.querySelector('[data-act="none"]').addEventListener('click', () => {
+    checkboxes.forEach(cb => cb.checked = false);
+    updateLink();
+  });
+  panel.querySelector('.config-close').addEventListener('click', () => backdrop.remove());
+  panel.querySelector('#config-copy-btn').addEventListener('click', (e) => {
+    const linkOutput = panel.querySelector('#config-link-output');
+    linkOutput.select();
+    navigator.clipboard.writeText(linkOutput.value).then(() => {
+      e.target.textContent = 'Kopiert ✓';
+      e.target.classList.add('copied');
+    });
+  });
+
+  document.body.appendChild(backdrop);
+  updateLink();
+}
 </script>
 </body>
 </html>
