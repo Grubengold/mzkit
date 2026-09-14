@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KI-Reifegrad · Grubengold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Mulish:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#201F1B;
+    --text:#403D37;
+    --soft:#8C887E;
+    --white:#FFFFFF;
+    --alt:#F5F4F0;
+    --sage:#9DB39A;
+    --sage-deep:#5E7358;
+    --sage-tint:#E8EDE3;
+    --line:#E7E4DC;
+    --line-strong:#D9D5C9;
+    --gold:#E6A23A;
+    --coral:#E85C40;
+    --pink:#E5007D;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--white);color:var(--text);
+    font-family:"Mulish",system-ui,sans-serif;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .eyebrow{font-family:"Mulish";font-weight:600;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--soft);margin:0;}
+
+  .brand{display:inline-flex;align-items:center;gap:1px;font-family:"Poppins";font-weight:700;
+    font-size:20px;letter-spacing:.04em;color:var(--ink);text-decoration:none;}
+  .brand img{height:28px;width:auto;display:block;}
+
+  /* ---------- HERO ---------- */
+  header.hero{background:var(--white);}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 0;gap:16px;}
+  .topbar .tag{font-family:"Mulish";font-weight:600;font-size:12.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--sage-deep);text-align:right;}
+  .hero-inner{padding:58px 0 64px;}
+  h1.title{font-family:"Poppins";font-weight:700;color:var(--ink);
+    font-size:clamp(33px,5.2vw,58px);line-height:1.08;letter-spacing:-.01em;margin:18px 0 0;max-width:18ch;}
+  .kw{color:var(--sage-deep);}
+  .lede{font-size:clamp(16px,1.7vw,19px);color:var(--text);max-width:62ch;margin:26px 0 0;line-height:1.6;}
+  .meta-line{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 30px;
+    font-family:"Mulish";font-weight:600;font-size:13.5px;color:var(--soft);}
+  .meta-line b{color:var(--sage-deep);font-weight:700;}
+
+  a:focus-visible{outline:2.5px solid var(--sage-deep);outline-offset:2px;}
+
+  /* ---------- STUFEN ---------- */
+  main{padding:46px 0 8px;}
+  .intro{margin-bottom:26px;}
+  .intro .eyebrow{margin-bottom:10px;}
+  .intro-sub{font-size:16px;color:var(--text);max-width:66ch;margin:0;}
+
+  .axis{display:flex;align-items:center;gap:14px;margin:0 0 20px;
+    font-family:"Mulish";font-weight:600;font-size:12.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--soft);}
+  .axis .bar{flex:1;height:2px;border-radius:2px;
+    background:linear-gradient(90deg,var(--line-strong),var(--sage));}
+
+  .stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch;}
+  .stage{background:var(--white);border:1px solid var(--line);border-radius:16px;
+    padding:24px 22px 26px;position:relative;overflow:hidden;
+    transition:box-shadow .2s,border-color .2s,transform .12s;scroll-margin-top:78px;
+    display:flex;flex-direction:column;}
+  .stage::before{content:"";position:absolute;left:0;top:0;height:100%;width:3px;
+    background:var(--sage-deep);opacity:0;transition:opacity .2s;}
+  .stage:hover{box-shadow:0 12px 30px rgba(32,31,27,.08);border-color:var(--line-strong);transform:translateY(-2px);}
+  .stage:hover::before{opacity:.8;}
+
+  .stage-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .stage-num{font-family:"Poppins";font-weight:700;font-size:15px;color:#fff;background:var(--sage-deep);
+    width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;}
+  .stage-kern{font-family:"Mulish";font-weight:700;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--sage-deep);}
+  .stage-title{font-family:"Poppins";font-weight:600;font-size:26px;line-height:1.15;
+    letter-spacing:-.01em;color:var(--ink);margin:0 0 4px;}
+  .stage-claim{font-family:"Mulish";font-weight:600;font-size:15px;color:var(--sage-deep);margin:0 0 14px;}
+  .stage-lead{font-family:"Mulish";font-size:15px;line-height:1.58;color:var(--text);
+    margin:0 0 20px;padding-bottom:18px;border-bottom:1px solid var(--line);}
+
+  .block-label{font-family:"Mulish";font-weight:700;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;margin:0 0 10px;display:flex;align-items:center;gap:8px;}
+  .block-label::before{content:"";width:14px;height:2px;display:inline-block;background:currentColor;}
+  .block-label.tech{color:var(--sage-deep);}
+  .block-label.human{color:var(--coral);margin-top:20px;}
+
+  .stage ul{list-style:none;margin:0;padding:0;}
+  .stage ul li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.5;
+    color:var(--text);margin-bottom:9px;}
+  .stage ul li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;
+    border-radius:50%;opacity:.7;}
+  .stage ul.tech li::before{background:var(--sage-deep);}
+  .stage ul.human li::before{background:var(--coral);}
+  .stage ul.human li b{font-weight:600;color:var(--ink);}
+
+  /* ---------- FLIESSENDER ÜBERGANG ---------- */
+  .flow{background:var(--alt);border-top:1px solid var(--line);margin-top:50px;}
+  .flow-inner{padding:50px 0 56px;}
+  .flow-eyebrow{color:var(--gold);margin-bottom:8px;}
+  .flow h2{font-family:"Poppins";font-weight:600;font-size:clamp(22px,3vw,29px);
+    color:var(--ink);margin:0 0 10px;letter-spacing:-.01em;}
+  .flow .intro-p{max-width:70ch;font-size:15.5px;line-height:1.6;color:var(--text);margin:0 0 26px;}
+  .flow-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 28px;}
+  .f-item{position:relative;padding-left:16px;}
+  .f-item::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;
+    background:var(--gold);opacity:.75;}
+  .f-item b{font-family:"Poppins";font-weight:600;color:var(--ink);font-size:15.5px;display:block;margin-bottom:1px;}
+  .f-item span{font-size:14px;color:var(--text);line-height:1.5;}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--sage-tint);margin-top:0;border-top:1px solid var(--line);}
+  .foot-inner{padding:50px 0 44px;}
+  .foot-inner h3{font-family:"Poppins";font-weight:600;color:var(--ink);font-size:22px;margin:0 0 12px;}
+  .foot-inner p{max-width:66ch;font-size:15px;line-height:1.62;margin:0 0 10px;color:var(--text);}
+  .foot-meta{margin-top:28px;padding-top:20px;border-top:1px solid var(--line-strong);
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
+    font-family:"Mulish";font-weight:600;font-size:12.5px;color:var(--soft);}
+  .foot-meta .heart{color:var(--coral);}
+  .foot-meta b{color:var(--sage-deep);}
+
+  @media(max-width:900px){.stage-grid{grid-template-columns:1fr;}.flow-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:600px){.flow-grid{grid-template-columns:1fr;}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="index.html"><img src="assets/gglogo.jpeg" alt="Grubengold"></a>
+      <span class="tag">Menschenzentrierte KI-Transformation</span>
+    </div>
+  </div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">KI-Reifegrad</p>
+    <h1 class="title">Wo Ihre Organisation mit KI <span class="kw">steht</span></h1>
+    <p class="lede">Drei Stufen, an denen sich der KI-Einsatz im Unternehmen einordnen lässt. Nicht nur nach Technologie und Prozessen, sondern auch danach, was er für die Menschen und ihre Zusammenarbeit bedeutet.</p>
+    <div class="meta-line">
+      <span>Version <b>v0.1</b></span>
+      <span>Stand <b>August 2026</b></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="axis">
+    <span>Geringe Reife</span>
+    <span class="bar"></span>
+    <span>Hohe Reife</span>
+  </div>
+
+  <div class="stage-grid">
+
+    <article class="stage" id="stufe-1">
+      <div class="stage-top"><span class="stage-num">1</span><span class="stage-kern">Stufe 1</span></div>
+      <h2 class="stage-title">Exploration</h2>
+      <p class="stage-claim">Testen und Lernen</p>
+      <p class="stage-lead">Die Organisation probiert KI in einzelnen Pilotprojekten aus und baut Grundwissen auf.</p>
+
+      <p class="block-label tech">Technologie &amp; Organisation</p>
+      <ul class="tech">
+        <li>Einzelne Experimente und Pilotprojekte</li>
+        <li>Isolierte Teams und Abteilungen</li>
+        <li>Fokus auf Lernen und Verständnis</li>
+        <li>Wenig Standardisierung, Regeln entstehen fallweise</li>
+      </ul>
+
+      <p class="block-label human">Menschen &amp; Zusammenarbeit</p>
+      <ul class="human">
+        <li>Einzelne treiben das Thema, Kompetenz ist sehr ungleich verteilt</li>
+        <li>Nutzung findet auch dort statt, wo sie nicht vorgesehen ist</li>
+        <li>Erwartungen schwanken zwischen Euphorie und Abwehr</li>
+      </ul>
+    </article>
+
+    <article class="stage" id="stufe-2">
+      <div class="stage-top"><span class="stage-num">2</span><span class="stage-kern">Stufe 2</span></div>
+      <h2 class="stage-title">Integration</h2>
+      <p class="stage-claim">In Prozesse integrieren</p>
+      <p class="stage-lead">KI ist in bestehende Prozesse integriert und wird produktiv eingesetzt.</p>
+
+      <p class="block-label tech">Technologie &amp; Organisation</p>
+      <ul class="tech">
+        <li>Produktiver Einsatz von KI-Anwendungen</li>
+        <li>Skalierung erfolgreicher Lösungen über einzelne Abteilungen hinaus</li>
+        <li>Governance und Richtlinien entstehen</li>
+        <li>Fokus auf Effizienz und Prozessoptimierung</li>
+      </ul>
+
+      <p class="block-label human">Menschen &amp; Zusammenarbeit</p>
+      <ul class="human">
+        <li>Nutzung wird erwartet, der Kompetenzaufbau hinkt hinterher</li>
+        <li>Rollen bleiben gleich, während sich die Arbeit darin verändert</li>
+        <li>Offener Umgang mit der eigenen KI-Nutzung ist noch nicht selbstverständlich</li>
+      </ul>
+    </article>
+
+    <article class="stage" id="stufe-3">
+      <div class="stage-top"><span class="stage-num">3</span><span class="stage-kern">Stufe 3</span></div>
+      <h2 class="stage-title">Transformation</h2>
+      <p class="stage-claim">Strategisch neu denken, sich laufend neu aufstellen</p>
+      <p class="stage-lead">KI ist strategischer Kern der Organisation und ermöglicht neue Geschäftsmodelle.</p>
+
+      <p class="block-label tech">Technologie &amp; Organisation</p>
+      <ul class="tech">
+        <li>Neue KI-gestützte Geschäftsmodelle und Erlösquellen</li>
+        <li>KI-native Produkte und Dienstleistungen</li>
+        <li>Daten als strategisches Asset</li>
+        <li>Cross-funktionale Zusammenarbeit</li>
+      </ul>
+
+      <p class="block-label human">Menschen &amp; Zusammenarbeit</p>
+      <ul class="human">
+        <li>Die Aufgabenteilung zwischen Mensch und KI wird regelmäßig neu verhandelt, nicht einmalig festgelegt</li>
+        <li>Neue Technologie wird in Wochen aufgenommen, nicht in Projekten</li>
+        <li>Kompetenzaufbau läuft mit der Technologie mit, nicht hinterher</li>
+        <li>Mitarbeitende gestalten mit, wo KI unterstützt und wo nicht</li>
+      </ul>
+    </article>
+
+  </div>
+</main>
+
+<section class="flow">
+  <div class="wrap flow-inner">
+    <p class="eyebrow flow-eyebrow">Wie das Modell zu lesen ist</p>
+    <h2>Ein fließender Übergang, keine Schublade</h2>
+    <p class="intro-p">Die Stufen beschreiben einen Schwerpunkt, nicht einen Zustand. Die meisten Organisationen sind gleichzeitig auf mehreren Stufen unterwegs: In einigen Bereichen läuft KI längst produktiv, während die großen Kernprozesse noch auf Datenqualität und Prozessklarheit warten. Wer auf Stufe 2 steht, hat oft schon einzelne Aspekte von Stufe 3 erreicht. Beides zugleich ist der Normalfall.</p>
+
+    <div class="flow-grid">
+      <div class="f-item"><b>Je nachdem, was man anschaut</b><span>Dieselbe Organisation ordnet sich unterschiedlich ein, abhängig davon, ob man einen Kernprozess, eine Abteilung oder eine einzelne Aufgabe betrachtet.</span></div>
+      <div class="f-item"><b>Die Papierlage ist nicht die Realität</b><span>Offizielle Einordnung und tatsächliche Nutzung liegen meist auseinander. Diese Lücke ist der aufschlussreichste Befund, nicht ein Messfehler.</span></div>
+      <div class="f-item"><b>Höher ist nicht automatisch besser</b><span>Die passende Zielposition hängt vom Geschäftsmodell ab. Entscheidend ist nicht, wie weit rechts eine Organisation steht, sondern ob es dort trägt.</span></div>
+      <div class="f-item"><b>Zwischen 1 und 2 wird es erst schwerer</b><span>Die Erwartung an die Menschen steigt schneller als ihre Kompetenz und schneller als die Rollen nachziehen. Genau hier bleiben Vorhaben stecken.</span></div>
+      <div class="f-item"><b>Stufe 3 ist nicht die Vertiefung von Stufe 2</b><span>Wer KI ins Geschäftsmodell nimmt, verändert damit fortlaufend, wer was tut. Das trägt nur eine Organisation, die Arbeitsteilung neu verhandeln kann.</span></div>
+      <div class="f-item"><b>Zwei Wege parallel</b><span>Grundlagen wie Prozesse und Daten brauchen Zeit. Dort, wo die Voraussetzungen schon reichen, lässt sich sofort starten. Beides zugleich hält die Bewegung in Gang.</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <h3>Warum wir die Menschen mit aufführen</h3>
+    <p>Gängige Reifegradmodelle beschreiben, wie weit KI technisch und prozessual eingebunden ist. Was der Einsatz für Kompetenz, Rollen, Vertrauen und Zusammenarbeit bedeutet, bleibt darin unsichtbar. Genau dort entscheidet sich aber, ob aus Nutzung Wertschöpfung wird.</p>
+    <p>Weil sich KI schneller weiterentwickelt als Kompetenzen und Strukturen, lässt sich kein fixes Zielbild designen. Die höchste Stufe beschreibt deshalb keinen Endzustand, sondern eine Fähigkeit: sich immer wieder neu aufstellen zu können.</p>
+    <p>Leitidee bleibt durchgängig: KI unterstützt und befähigt den Menschen, sie ersetzt ihn nicht.</p>
+    <div class="foot-meta">
+      <span>Grubengold · <b>Menschenzentrierte KI-Transformation</b></span>
+      <span>Made with <span class="heart">♥</span> in Bochum · v0.1 · Stand August 2026</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

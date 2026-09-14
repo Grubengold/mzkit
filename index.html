@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KI-Tools · Grubengold</title>
+<title>KI-Tools · Grubengold_shift</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Mulish:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -22,6 +22,9 @@
     --gold:#E6A23A;
     --coral:#E85C40;
     --pink:#E5007D;
+    --cta:#ECA631;
+    --grau:#9A968C;
+    --himmelblau:#4FA3D1;
     --maxw:1080px;
   }
   *{box-sizing:border-box;}
@@ -35,32 +38,35 @@
     font-size:20px;letter-spacing:.04em;color:var(--ink);text-decoration:none;}
   .brand img{height:28px;width:auto;display:block;}
 
+  /* ---------- WORTMARKE ---------- */
+  .wordmark{font-family:"Poppins";font-weight:600;font-size:15px;letter-spacing:.01em;
+    color:var(--ink);white-space:nowrap;}
+  .wordmark .shift{color:var(--cta);}
+
   header.hero{background:var(--white);}
   .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 0;gap:16px;}
-  .topbar .tag{font-family:"Mulish";font-weight:600;font-size:12.5px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--sage-deep);text-align:right;}
-  .hero-inner{padding:58px 0 64px;}
+  .hero-inner{padding-top:58px;padding-bottom:46px;}
   h1.title{font-family:"Poppins";font-weight:700;color:var(--ink);
     font-size:clamp(33px,5.2vw,58px);line-height:1.08;letter-spacing:-.01em;margin:18px 0 0;max-width:22ch;}
   .kw{color:var(--sage-deep);}
-  .lede{font-size:clamp(16px,1.7vw,19px);color:var(--text);max-width:62ch;margin:26px 0 0;line-height:1.6;}
+  .lede{font-size:clamp(16px,1.7vw,19px);color:var(--text);max-width:62ch;margin:24px 0 0;line-height:1.6;}
 
   a:focus-visible{outline:2.5px solid var(--sage-deep);outline-offset:2px;}
 
-  /* ---------- INDEX CARDS ---------- */
-  main{padding:0 0 72px;}
-  .doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+  /* ---------- INDEX TILES ---------- */
+  main{padding:0 0 12px;}
+  .doc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
 
   .doc-card{
     background:var(--white);
     border:1px solid var(--line);
-    border-radius:18px;
-    padding:32px 30px 34px;
+    border-radius:14px;
+    padding:20px 18px 22px;
     text-decoration:none;
     color:inherit;
     display:flex;
     flex-direction:column;
-    gap:14px;
+    gap:9px;
     position:relative;
     overflow:hidden;
     transition:box-shadow .2s, border-color .2s, transform .12s;
@@ -69,43 +75,53 @@
     content:"";
     position:absolute;
     left:0;top:0;
-    height:100%;width:4px;
+    height:100%;width:3px;
     background:var(--accent,var(--pink));
     opacity:0;
     transition:opacity .2s;
   }
   .doc-card:hover{
-    box-shadow:0 14px 36px rgba(32,31,27,.09);
+    box-shadow:0 10px 26px rgba(32,31,27,.08);
     border-color:var(--line-strong);
-    transform:translateY(-3px);
+    transform:translateY(-2px);
   }
   .doc-card:hover::before{opacity:1;}
 
+  .doc-card--reifegrad{--accent:var(--coral);}
+  .doc-card--prisma{--accent:var(--grau);}
   .doc-card--skills{--accent:var(--pink);}
-  .doc-card--prisma{--accent:var(--sage-deep);}
-  .doc-card--heuristiken{--accent:var(--sage-deep);}
+  .doc-card--heuristiken{--accent:var(--himmelblau);}
+
+  .doc-icon{
+    width:40px;height:40px;border-radius:11px;
+    display:grid;place-items:center;flex:none;
+    color:var(--accent,var(--pink));
+    background:color-mix(in srgb, var(--accent,var(--pink)) 11%, var(--white));
+    transition:background .2s;
+  }
+  .doc-card:hover .doc-icon{background:color-mix(in srgb, var(--accent,var(--pink)) 17%, var(--white));}
 
   .doc-tag{
     font-family:"Mulish";
-    font-weight:600;
-    font-size:11px;
-    letter-spacing:.18em;
+    font-weight:700;
+    font-size:10.5px;
+    letter-spacing:.16em;
     text-transform:uppercase;
     color:var(--accent,var(--pink));
     margin:0;
   }
   .doc-title{
     font-family:"Poppins";
-    font-weight:700;
-    font-size:clamp(20px,2.4vw,26px);
-    line-height:1.15;
-    letter-spacing:-.01em;
+    font-weight:600;
+    font-size:18px;
+    line-height:1.2;
+    letter-spacing:-.005em;
     color:var(--ink);
     margin:0;
   }
   .doc-desc{
-    font-size:15.5px;
-    line-height:1.6;
+    font-size:14px;
+    line-height:1.5;
     color:var(--text);
     margin:0;
     flex:1;
@@ -113,27 +129,51 @@
   .doc-arrow{
     display:inline-flex;
     align-items:center;
-    gap:7px;
+    gap:6px;
     font-family:"Mulish";
     font-weight:700;
-    font-size:13px;
+    font-size:12.5px;
     letter-spacing:.06em;
     color:var(--accent,var(--pink));
-    margin-top:6px;
+    margin-top:2px;
   }
   .doc-arrow svg{transition:transform .18s;}
   .doc-card:hover .doc-arrow svg{transform:translateX(4px);}
 
+  /* ---------- CALL TO ACTION ---------- */
+  .cta-band{margin-top:56px;background:var(--alt);}
+  .cta-inner{padding-top:42px;padding-bottom:46px;display:flex;flex-wrap:wrap;align-items:center;
+    justify-content:space-between;gap:22px 32px;}
+  .cta-text h2{font-family:"Poppins";font-weight:600;font-size:clamp(20px,2.6vw,26px);
+    color:var(--ink);margin:6px 0 6px;letter-spacing:-.01em;}
+  .cta-text p{margin:0;font-size:15.5px;line-height:1.6;color:var(--text);max-width:54ch;}
+  .btn-cta{
+    display:inline-flex;align-items:center;gap:9px;
+    background:var(--cta);color:#fff;text-decoration:none;
+    font-family:"Poppins";font-weight:600;font-size:16px;
+    padding:15px 28px;border-radius:12px;flex:none;
+    box-shadow:0 6px 18px rgba(236,166,49,.28);
+    transition:background .18s, transform .12s, box-shadow .18s;
+  }
+  .btn-cta:hover{background:#D8942A;transform:translateY(-2px);
+    box-shadow:0 10px 24px rgba(236,166,49,.34);}
+  .btn-cta svg{transition:transform .18s;}
+  .btn-cta:hover svg{transform:translateX(4px);}
+  .btn-cta:focus-visible{outline:2.5px solid var(--ink);outline-offset:3px;}
+
   /* ---------- FOOTER ---------- */
-  footer{background:var(--sage-tint);border-top:1px solid var(--line);}
-  .foot-inner{padding:50px 0 44px;}
-  .foot-meta{padding-top:20px;border-top:1px solid var(--line-strong);
+  footer{background:var(--white);border-top:1px solid var(--line);}
+  .foot-inner{padding-top:44px;padding-bottom:42px;}
+  .foot-meta{padding-top:0;
     display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     font-family:"Mulish";font-weight:600;font-size:12.5px;color:var(--soft);}
   .foot-meta .heart{color:var(--coral);}
   .foot-meta b{color:var(--sage-deep);}
+  .foot-meta .wordmark{font-size:13px;}
 
-  @media(max-width:640px){.doc-grid{grid-template-columns:1fr;}}
+  @media(max-width:900px){.doc-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.doc-grid{grid-template-columns:1fr;}
+    .cta-inner{flex-direction:column;align-items:flex-start;}}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto;}}
 </style>
 </head>
@@ -143,48 +183,89 @@
   <div class="wrap">
     <div class="topbar">
       <a class="brand" href="#"><img src="assets/gglogo.jpeg" alt="Grubengold"></a>
+      <span class="wordmark">Grubengold<span class="shift">_shift</span></span>
     </div>
   </div>
   <div class="wrap hero-inner">
     <p class="eyebrow">Arbeitsmaterialien</p>
-    <h1 class="title">KI in Organisationen <span class="kw">verstehen</span> und <span class="kw">gestalten</span></h1>
-    </div>
+    <h1 class="title">Die KI-Transformation <span class="kw">verstehen</span> und <span class="kw">gestalten</span></h1>
+  </div>
 </header>
 
 <main class="wrap">
   <div class="doc-grid">
 
-    <a class="doc-card doc-card--skills" href="ki-skills.html">
-      <p class="doc-tag">KI-Fähigkeitenraster</p>
-      <h2 class="doc-title">Wie KI die Arbeit unterstützen kann</h2>
-      <p class="doc-desc">Zerlegt KI-Use-Cases in ihre Teilaufgaben und hilft, die Fähigkeiten von KI differenziert zu besprechen.</p>
+    <a class="doc-card doc-card--reifegrad" href="ki-reifegrad.html">
+      <span class="doc-icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 20V14M12 20V10M20 20V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <p class="doc-tag">Standortbestimmung</p>
+      <h2 class="doc-title">Reifegrad von Unternehmen</h2>
       <span class="doc-arrow">
         Öffnen
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
     </a>
 
     <a class="doc-card doc-card--prisma" href="prisma.html">
+      <span class="doc-icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="prisma-rainbow" x1="3" y1="19.5" x2="21" y2="3.5" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#E85C40"/>
+              <stop offset="25%" stop-color="#ECA631"/>
+              <stop offset="50%" stop-color="#9DB39A"/>
+              <stop offset="75%" stop-color="#4FA3D1"/>
+              <stop offset="100%" stop-color="#E5007D"/>
+            </linearGradient>
+          </defs>
+          <path d="M12 3.5 21 19.5H3L12 3.5Z" stroke="url(#prisma-rainbow)" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </span>
       <p class="doc-tag">Analyserahmen</p>
-      <h2 class="doc-title">Übersicht aller relevanten Dimensionen</h2>
-      <p class="doc-desc">Betrachtung des Dreiklangs aus Technologie, Mensch und Organisation zur Identifikation von Handlungsfeldern und Maßnahmen</p>
+      <h2 class="doc-title">Zu gestaltende Dimensionen</h2>
       <span class="doc-arrow">
         Öffnen
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </a>
+
+    <a class="doc-card doc-card--skills" href="ki-skills.html">
+      <span class="doc-icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="3.5" y="3.5" width="7" height="7" rx="1.6" stroke="currentColor" stroke-width="2"/>
+          <rect x="13.5" y="3.5" width="7" height="7" rx="1.6" stroke="currentColor" stroke-width="2"/>
+          <rect x="3.5" y="13.5" width="7" height="7" rx="1.6" stroke="currentColor" stroke-width="2"/>
+          <rect x="13.5" y="13.5" width="7" height="7" rx="1.6" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </span>
+      <p class="doc-tag">KI Fähigkeiten</p>
+      <h2 class="doc-title">Wie KI unterstützt</h2>
+      <span class="doc-arrow">
+        Öffnen
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
     </a>
 
     <a class="doc-card doc-card--heuristiken" href="heuristiken-ki-gestaltung.html">
+      <span class="doc-icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 12.5 9 17.5 20 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
       <p class="doc-tag">Gestaltungsprinzipien</p>
-      <h2 class="doc-title">Heuristiken für die Gestaltung von KI-Lösungen</h2>
-      <p class="doc-desc">Leitlinien und Prinzipien für den durchdachten Einsatz von KI in Organisationskontexten.</p>
+      <h2 class="doc-title">Heuristiken für die Gestaltung von KI Use Cases</h2>
       <span class="doc-arrow">
         Öffnen
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
@@ -193,9 +274,25 @@
   </div>
 </main>
 
-<footer style="margin-top:64px;">
+<section class="cta-band">
+  <div class="wrap cta-inner">
+    <div class="cta-text">
+      <p class="eyebrow">Zusammenarbeit</p>
+      <p>Wir helfen, Unternehmen zu gestalten, in denen sich das Zusammenspiel von Mensch und Technologie kontinuierlich weiterentwickeln kann.</p>
+    </div>
+    <a class="btn-cta" href="https://grubengold.io/kontakt/">
+      Kontakt aufnehmen
+      <svg width="17" height="17" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<footer>
   <div class="wrap foot-inner">
     <div class="foot-meta">
+      <span class="wordmark">Grubengold<span class="shift">_shift</span></span>
       <span>made with <span class="heart">♥</span> in Bochum</span>
     </div>
   </div>
