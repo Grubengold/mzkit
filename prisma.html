@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prisma-Modell — Mensch · Technologie · Organisation</title>
+<title>Analyserahmen · Grubengold_shift</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -49,8 +49,19 @@
 
   .topbar {
     position: relative; z-index: 3;
-    display:flex; justify-content:space-between; align-items:flex-start;
+    display:flex; justify-content:space-between; align-items:center;
     padding: 22px 44px 0 44px;
+  }
+  .brand-left { display:flex; align-items:center; gap:14px; }
+  .brand-logo { display:block; line-height:0; }
+  .brand-logo img { height:28px; width:auto; display:block; border-radius:3px; }
+  .wordmark {
+    font-family: var(--grain-sans);
+    font-size: clamp(16px,1.7vw,19px);
+    font-weight: 600;
+    letter-spacing: -.01em;
+    white-space: nowrap;
+    color: var(--ink);
   }
   .eyebrow { font-family:var(--grain-mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); }
   h1 { margin:4px 0 0 0; font-size: clamp(18px,2.2vw,24px); font-weight:600; letter-spacing:-.01em; }
@@ -59,7 +70,7 @@
   .layout {
     position: relative; z-index: 2;
     display: flex;
-    height: calc(100vh - 72px);
+    height: calc(100vh - 96px);
     margin-top: 10px;
   }
 
@@ -146,6 +157,10 @@
   .titleblock a { text-decoration: underline; }
 
   @media (max-width: 900px) {
+    .topbar { padding: 16px 24px 0 24px; gap: 12px; }
+    .brand-left { gap: 10px; }
+    .brand-logo img { height: 22px; }
+    .wordmark { font-size: 15px; }
     .layout { flex-direction: column; height: auto; }
     .left { width: 100%; height: auto; padding: 10px 24px 0 24px; }
     .tri-wrap { width: 190px; }
@@ -219,31 +234,34 @@
 </head>
 <body>
   <div class="topbar">
-    <div>
-      <div class="eyebrow"><a href="index.html" style="color:inherit; text-decoration:none;">Grubengold</a> — Analyse-Prisma</div>
+    <div class="brand-left">
+      <a class="brand-logo" href="index.html" title="Zur Übersicht">
+        <img src="assets/gglogo.jpeg" alt="Grubengold">
+      </a>
     </div>
+    <div class="wordmark">Grubengold<span style="color:var(--c-org)">_</span><span style="color:var(--c-to)">s</span><span style="color:var(--c-tech)">h</span><span style="color:var(--c-mt)">i</span><span style="color:var(--c-mensch)">f</span><span style="color:var(--c-mo)">t</span></div>
   </div>
 
   <div class="layout">
     <div class="left">
       <div class="tri-wrap">
         <svg viewBox="0 -10 300 245">
-          <line id="edge-mt" class="tri-edge" x1="150" y1="20" x2="35" y2="190" />
-          <line id="edge-to" class="tri-edge" x1="150" y1="20" x2="265" y2="190" />
-          <line id="edge-mo" class="tri-edge" x1="35" y1="190" x2="265" y2="190" />
-          <text id="node-tech" class="tri-node" x="150" y="6" text-anchor="middle">Technologie</text>
+          <line id="edge-mt" class="tri-edge" x1="35" y1="190" x2="265" y2="190" />
+          <line id="edge-to" class="tri-edge" x1="265" y1="190" x2="150" y2="20" />
+          <line id="edge-mo" class="tri-edge" x1="35" y1="190" x2="150" y2="20" />
+          <text id="node-org" class="tri-node" x="150" y="6" text-anchor="middle">Organisation</text>
           <text id="node-mensch" class="tri-node" x="4" y="224" text-anchor="start">Mensch</text>
-          <text id="node-org" class="tri-node" x="296" y="224" text-anchor="end">Organisation</text>
-          <line id="underline-tech" class="tri-underline" x1="108" y1="13" x2="192" y2="13" />
+          <text id="node-tech" class="tri-node" x="296" y="224" text-anchor="end">Technologie</text>
+          <line id="underline-org" class="tri-underline" x1="93" y1="13" x2="207" y2="13" />
           <line id="underline-mensch" class="tri-underline" x1="4" y1="231" x2="70" y2="231" />
-          <line id="underline-org" class="tri-underline" x1="182" y1="231" x2="296" y2="231" />
-          <text id="node-job" class="tri-node" x="150" y="133" text-anchor="middle">Job</text>
-          <line id="underline-job" class="tri-underline" x1="138" y1="140" x2="162" y2="140" />
+          <line id="underline-tech" class="tri-underline" x1="212" y1="231" x2="296" y2="231" />
+          <text id="node-arbeit" class="tri-node" x="150" y="133" text-anchor="middle">Arbeit</text>
+          <line id="underline-arbeit" class="tri-underline" x1="126" y1="140" x2="174" y2="140" />
         </svg>
       </div>
       <div class="focus-readout" id="focus-readout">
-        <div class="focus-group" id="focus-group">Technologie</div>
-        <div class="focus-title" id="focus-title">Daten</div>
+        <div class="focus-group" id="focus-group">Arbeitsaufgabe</div>
+        <div class="focus-title" id="focus-title">Aufgabenzuschnitt</div>
         <div class="focus-text" id="focus-text"></div>
       </div>
     </div>
@@ -254,14 +272,13 @@
   </div>
 
   <div class="titleblock">
-    Grubengold · Menschenzentrierte KI-Transformation<br>
-    Made with ♥ in Bochum · v0.3 · Stand August 2026<br>
+    Made with ♥ in Bochum · v0.5 · Stand September 2026<br>
     <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" style="color:inherit;">CC BY-SA 4.0</a> · Namensnennung: Grubengold
   </div>
 
   <script>
 const GROUP_META = {
-  zentrum:{ label: "Arbeitsaufgabe",             color: "var(--c-zentrum)",node: "node-job",    underline: "underline-job" },
+  zentrum:{ label: "Arbeitsaufgabe",             color: "var(--c-zentrum)",node: "node-arbeit", underline: "underline-arbeit" },
   tech:   { label: "Technologie",               color: "var(--c-tech)",   node: "node-tech",   underline: "underline-tech" },
   mensch: { label: "Mensch",                    color: "var(--c-mensch)", node: "node-mensch", underline: "underline-mensch" },
   org:    { label: "Organisation",               color: "var(--c-org)",    node: "node-org",    underline: "underline-org" },
@@ -300,7 +317,7 @@ const ITEMS_FULL = [
     v:"Verfügbar, zugänglich, gut genug?", w:"Tragen die Daten die konkreten Anwendungsfälle?", k:"Wachsen Bestände und Qualität mit neuen Anforderungen mit, und fließen Nutzungssignale zurück?"},
   {sid:10, g:"tech", t:"Modelle & Stack",
     kern:"Modelle, Werkzeuge und Plattform, das Wissen über deren Leistungsprofil und dessen Grenzen sowie die Austauschbarkeit der Bausteine. Modularität ist dabei keine Kür, sondern Konstruktionsanforderung: Nur wenn Komponenten hinter stabilen Abstraktionsschichten austauschbar bleiben, sind technische Entscheidungen revidierbar.",
-    v:"Ist eine passende Basis vorhanden, ihr Leistungsprofil bekannt und die Architektur in austauschbare Bausteine geschnitten?", w:"Leistet der Stack in den realen Aufgaben, was er soll, und ist ein Wechsel im Alltag ohne Großprojekt möglich?", k:"Wird das Leistungsprofil bei jedem Wechsel neu vermessen statt fortgeschrieben, und bleibt Austauschbarkeit über wachsende Integrationen hinweg erhalten? (Technikseitiger Ankerpunkt der K-Frage.)"},
+    v:"Ist eine passende Basis vorhanden, ihr Leistungsprofil bekannt und die Architektur in austauschbare Bausteine geschnitten?", w:"Leistet der Stack in den realen Aufgaben, was er soll, und ist ein Wechsel im Alltag ohne Großprojekt möglich?", k:"Wird das Leistungsprofil bei jedem Wechsel neu vermessen statt fortgeschrieben, und bleibt Austauschbarkeit über wachsende Integrationen hinweg erhalten?"},
   {sid:11, g:"tech", t:"Technische Sicherheit & Robustheit",
     kern:"Wie sich das System verhält, wenn es nicht wie vorgesehen läuft. Gegenüber klassischer Software verschiebt sich der Schwerpunkt: Der harte Ausfall ist seltener das Problem als die plausibel aussehende Fehlleistung an den Rändern der Leistungsfähigkeit. Datenschutz gehört in die Konstruktion, nicht in die Abnahme.",
     v:"Ist das Schutzniveau definiert und gebaut?", w:"Hält das System im Betrieb, auch an den Rändern?", k:"Werden neue Risiken neuer Modelle laufend bewertet, also Sicherheit als Prozess statt als Abnahme?"},
@@ -477,6 +494,23 @@ function selectItem(index) {
   }
 }
 
+// --- Unterstriche exakt an die gerenderte Textbreite anlegen ---
+// Die x-Werte im SVG sind nur Rückfallwerte. Sobald die Schrift geladen ist,
+// wird die tatsächliche Breite gemessen, damit Unterstrich und Wort bündig sind.
+function fitUnderlines() {
+  Object.values(GROUP_META).forEach(m => {
+    if (!m.node || !m.underline) return;
+    const textEl = document.getElementById(m.node);
+    const lineEl = document.getElementById(m.underline);
+    if (!textEl || !lineEl) return;
+    let box;
+    try { box = textEl.getBBox(); } catch (e) { return; }
+    if (!box || !box.width) return;
+    lineEl.setAttribute('x1', box.x);
+    lineEl.setAttribute('x2', box.x + box.width);
+  });
+}
+
 listEl.addEventListener('scroll', () => {
   if (!ticking) {
     requestAnimationFrame(() => { checkLoop(); ticking = false; });
@@ -486,10 +520,14 @@ listEl.addEventListener('scroll', () => {
 
 window.addEventListener('load', () => {
   measure();
+  fitUnderlines();
   selectItem(0);
   if (isConfigMode) buildConfigPanel();
 });
 window.addEventListener('resize', measure);
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(fitUnderlines);
+}
 
 // --- Konfigurations-Panel: Subdimensionen für einen Kunden-Link ein-/ausblenden ---
 function buildConfigPanel() {

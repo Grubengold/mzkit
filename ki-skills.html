@@ -38,19 +38,21 @@
   /* ---------- HERO (wie Heuristiken-Seite) ---------- */
   header.hero{background:var(--white);}
   .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 0;gap:16px;}
-  .topbar .tag{font-family:"Mulish";font-weight:600;font-size:12.5px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--sage-deep);text-align:right;}
-  .hero-inner{padding:58px 0 64px;}
+  /* ---------- WORTMARKE ---------- */
+  .wordmark{font-family:"Poppins";font-weight:600;font-size:15px;letter-spacing:.01em;
+    color:var(--ink);white-space:nowrap;}
+  .wordmark .shift{color:var(--pink);}
+  .hero-inner{padding-top:58px;padding-bottom:64px;}
   h1.title{font-family:"Poppins";font-weight:700;color:var(--ink);
     font-size:clamp(33px,5.2vw,58px);line-height:1.08;letter-spacing:-.01em;margin:18px 0 0;max-width:18ch;}
-  .kw{color:var(--sage-deep);}
+  .kw{color:var(--pink);}
   .lede{font-size:clamp(16px,1.7vw,19px);color:var(--text);max-width:62ch;margin:26px 0 0;line-height:1.6;}
   .meta-line{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 30px;
     font-family:"Mulish";font-weight:600;font-size:13.5px;color:var(--soft);}
-  .meta-line b{color:var(--sage-deep);font-weight:700;}
+  .meta-line b{color:var(--pink);font-weight:700;}
 
   /* ---------- Fokus-Sichtbarkeit ---------- */
-  a:focus-visible{outline:2.5px solid var(--sage-deep);outline-offset:2px;}
+  a:focus-visible{outline:2.5px solid var(--pink);outline-offset:2px;}
 
   /* ---------- MITTELTEIL: FÄHIGKEITEN-RASTER ---------- */
   main{padding:46px 0 8px;}
@@ -79,7 +81,7 @@
 
   /* ---------- GEGENPOL: WAS BEIM MENSCHEN BLEIBT ---------- */
   .human{background:var(--alt);border-top:1px solid var(--line);margin-top:50px;}
-  .human-inner{padding:50px 0 56px;}
+  .human-inner{padding-top:50px;padding-bottom:56px;}
   .human-eyebrow{color:var(--coral);margin-bottom:8px;}
   .human h2{font-family:"Poppins";font-weight:600;font-size:clamp(22px,3vw,29px);
     color:var(--ink);margin:0 0 10px;letter-spacing:-.01em;}
@@ -93,18 +95,14 @@
   .sub-label{font-family:"Poppins";font-weight:600;font-size:16px;color:var(--ink);margin:0 0 16px;
     display:flex;align-items:center;gap:9px;}
   .sub-label::before{content:"";width:16px;height:2px;background:var(--coral);display:inline-block;}
-  .sub-label--gap{margin-top:34px;}
 
   /* ---------- FOOTER (wie Heuristiken-Seite) ---------- */
-  footer{background:var(--sage-tint);margin-top:0;border-top:1px solid var(--line);}
-  .foot-inner{padding:50px 0 44px;}
-  .foot-inner h3{font-family:"Poppins";font-weight:600;color:var(--ink);font-size:22px;margin:0 0 12px;}
-  .foot-inner p{max-width:64ch;font-size:15px;line-height:1.62;margin:0 0 10px;color:var(--text);}
-  .foot-meta{margin-top:28px;padding-top:20px;border-top:1px solid var(--line-strong);
-    display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
+  footer{background:var(--white);margin-top:0;border-top:1px solid var(--line);}
+  .foot-inner{padding-top:44px;padding-bottom:42px;}
+  .foot-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     font-family:"Mulish";font-weight:600;font-size:12.5px;color:var(--soft);}
   .foot-meta .heart{color:var(--coral);}
-  .foot-meta b{color:var(--sage-deep);}
+  .foot-meta .wordmark{font-size:13px;}
 
   @media(max-width:900px){.cap-grid{grid-template-columns:repeat(2,1fr);}.human-grid{grid-template-columns:repeat(2,1fr);}}
   @media(max-width:600px){.cap-grid{grid-template-columns:1fr;}.human-grid{grid-template-columns:1fr;}}
@@ -117,7 +115,7 @@
   <div class="wrap">
     <div class="topbar">
       <a class="brand" href="index.html"><img src="assets/gglogo.jpeg" alt="Grubengold"></a>
-      <span class="tag">Menschenzentrierte KI-Transformation</span>
+      <span class="wordmark">Grubengold<span class="shift">_shift</span></span>
     </div>
   </div>
   <div class="wrap hero-inner">
@@ -213,26 +211,13 @@
       <div class="h-item"><b>Aus Erfahrung schöpfen</b><span>Das Bauchgefühl aus Jahren der Praxis.</span></div>
       <div class="h-item"><b>Konflikte schlichten</b><span>Zwischen Menschen vermitteln, Beziehungen heilen.</span></div>
     </div>
-
-    <p class="sub-label sub-label--gap">Worauf man bei KI achten muss</p>
-    <div class="human-grid">
-      <div class="h-item"><b>Erfindet Plausibles</b><span>KI kann Falsches überzeugend als Fakt präsentieren („Halluzination"). Zahlen, Zitate und rechtliche Aussagen immer gegenprüfen.</span></div>
-      <div class="h-item"><b>Übernimmt Verzerrungen</b><span>Vorurteile aus den Trainingsdaten landen in den Ergebnissen — heikel überall, wo es um Menschen geht.</span></div>
-      <div class="h-item"><b>Ist sprunghaft</b><span>Kleine Änderungen an der Eingabe können das Ergebnis kippen lassen; in ungewohnten Lagen versagt KI mitunter unvorhersehbar.</span></div>
-      <div class="h-item"><b>Schwächelt beim Urteilen</b><span>Bei den höheren Denkstufen (bewerten, wirklich Neues schaffen) ist KI deutlich schwächer als beim Zusammenfassen und Wiedergeben.</span></div>
-      <div class="h-item"><b>Braucht Aufsicht</b><span>Am besten mit klaren Grenzen, Eskalationswegen und einem Menschen, der prüfen kann und darf.</span></div>
-    </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap foot-inner">
-    <h3>Wie diese Liste zu lesen ist</h3>
-    <p>Die Fähigkeiten sind bewusst technologie-offen formuliert: Sie gelten für Text, Bild, Ton und Daten gleichermaßen.</p>
-    <p>Genauso wichtig wie die Fähigkeiten ist ihr Gegenpol: wo KI an Grenzen stößt, wo Vorsicht geboten ist und wo der Mensch unverzichtbar bleibt.</p>
-    <p>Leitidee bleibt durchgängig: KI unterstützt und befähigt den Menschen — sie ersetzt ihn nicht.</p>
     <div class="foot-meta">
-      <span>Grubengold · <b>Menschenzentrierte KI-Transformation</b></span>
+      <span class="wordmark">Grubengold<span class="shift">_shift</span></span>
       <span>Made with <span class="heart">♥</span> in Bochum · v2.2 · Stand Juni 2026</span>
     </div>
   </div>
