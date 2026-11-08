@@ -64,6 +64,13 @@
   .chip:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(32,31,27,.08);}
   .chip .dot{width:11px;height:11px;border-radius:50%;flex:none;}
   .chip.controls{margin-left:auto;background:var(--sage-deep);border-color:var(--sage-deep);color:#fff;}
+  .view-switch{display:inline-flex;align-items:center;gap:8px;}
+  .seg{display:inline-flex;border:1px solid var(--line-strong);background:var(--white);border-radius:999px;padding:3px;}
+  .seg button{font-family:"Poppins";font-weight:500;font-size:13px;line-height:1.2;color:var(--text);
+    background:none;border:0;border-radius:999px;padding:6px 14px;cursor:pointer;transition:background .18s,color .18s;}
+  .seg button:hover{color:var(--ink);}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:#fff;}
+  .seg button:focus-visible{outline:2.5px solid var(--sage-deep);outline-offset:2px;}
   .chip.controls:hover{box-shadow:0 4px 14px rgba(94,115,88,.4);}
   .chip:focus-visible,.acc-head:focus-visible,a:focus-visible{outline:2.5px solid var(--sage-deep);outline-offset:2px;}
 
@@ -159,10 +166,28 @@
   .cc-badge img{display:block;height:31px;width:auto;opacity:.82;transition:opacity .15s ease;}
   .cc-badge:hover img{opacity:1;}
 
+  /* Variante: Detailliert (Standard) oder Kurz */
+  .v-light{display:none;}
+  body.view-light .v-full{display:none;}
+  body.view-light .v-light{display:block;}
+  body.view-light .acc-body,body.view-light .toggle,body.view-light #toggleAll{display:none;}
+  body.view-light .acc-head{cursor:default;padding:19px 22px;}
+  body.view-light .h-title{margin-bottom:7px;}
+  body.view-light .card.open{box-shadow:none;border-color:var(--line);}
+  body.view-light .card.open::before{opacity:.5;height:3px;}
+  body.view-light .card:hover{box-shadow:none;border-color:var(--line);}
+
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto;}}
 </style>
 </head>
 <body>
+<script>
+  (function(){
+    var v='full';
+    try{ if(localStorage.getItem('gg-heuristiken-ansicht')==='light') v='light'; }catch(e){}
+    document.body.classList.toggle('view-light', v==='light');
+  })();
+</script>
 
 <header class="hero">
   <div class="wrap">
@@ -176,20 +201,23 @@
     <h1 class="title">Heuristiken für die Gestaltung von <span class="kw">KI-Lösungen</span> in Unternehmen</h1>
     <p class="lede">Die Heuristiken geben Orientierung bei der Evaluation und Gestaltung von KI-Lösungen. Sie sind hilfreiche Faustregeln, kein starres Rezept: Welche greifen, hängt vom konkreten Anwendungsfall, der Aufgabe und der Organisation ab.</p>
     <p class="lede">Sie verdichten Erkenntnisse aus Human-Computer Interaction, Human-Factors-Forschung und Arbeits- und Organisationspsychologie. Jede Heuristik ist mit ihrer Evidenzklasse gekennzeichnet: <b>fundiert</b> (peer-reviewte oder belastbare empirische Basis) oder <b>indikativ</b> (belastbare Praxis- und Branchenbeobachtungen ohne systematische Studienlage).</p>
+    <p class="lede">Jede Heuristik benennt eine Folge, die eintritt, wenn nicht gestaltet wird. Das kann ein Schaden sein, etwa Kompetenzverlust, Belastung oder Vertrauensverlust, oder es kann ausbleibende Wertschöpfung sein, etwa ein Hebel, der ungenutzt bleibt. Beide Formen sind gleichrangig.</p>
     <p class="lede">Leitidee bleibt durchgängig: KI unterstützt und befähigt den Menschen, sie ersetzt ihn nicht.</p>
     <div class="meta-line">
-      <span>Version <b>v0.9.2+</b> · Stand <b>August 2026</b> · wird erweitert</span>
+      <span>Version <b>v0.15</b> · Stand <b>November 2026</b> · wird erweitert</span>
     </div>
   </div>
 </header>
 
-<nav class="legend-bar" aria-label="Cluster-Navigation">
+<nav class="legend-bar" aria-label="Variante">
   <div class="legend-inner">
-    <span class="legend-label">Cluster</span>
-    <a class="chip" href="#cluster-a"><span class="dot" style="background:var(--c-a)"></span>System</a>
-    <a class="chip" href="#cluster-b"><span class="dot" style="background:var(--c-b)"></span>Interaktion</a>
-    <a class="chip" href="#cluster-c"><span class="dot" style="background:var(--c-c)"></span>Kognition</a>
-    <a class="chip" href="#cluster-d"><span class="dot" style="background:var(--c-d)"></span>Organisation</a>
+    <div class="view-switch" role="group" aria-label="Variante wählen">
+      <span class="legend-label">Variante</span>
+      <span class="seg">
+        <button type="button" data-view="full" aria-pressed="true">Detailliert</button>
+        <button type="button" data-view="light" aria-pressed="false">Kurz</button>
+      </span>
+    </div>
     <button class="chip controls" id="toggleAll" aria-pressed="false">Alle aufklappen</button>
   </div>
 </nav>
@@ -200,24 +228,24 @@
     <div class="cluster-head"><span class="ce">Cluster A</span><h2>Systemgestaltung</h2></div>
     <p class="cluster-sub">Wie das Gesamtsystem aus Technik, Rollen und Prozessen aufgesetzt wird, bevor die erste Interaktion stattfindet.</p>
     <div class="seam-group">
-
       <article class="card" id="h1">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h1-body">
           <span class="h-num">01</span>
           <span class="h-main">
             <span class="h-tag">System</span>
             <h3 class="h-title">Technik und Sozialsystem gemeinsam gestalten <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Gestalte nie nur das KI-Werkzeug, sondern <b>gleichzeitig Rollen, Aufgabenzuschnitte, Verantwortung und Lernprozesse</b>, das Prinzip der Joint Optimization.</p>
+            <p class="h-kern v-full">Gestalte nie nur das KI-Werkzeug, sondern <b>gleichzeitig Rollen, Aufgabenzuschnitte, Verantwortung und Lernprozesse</b>, das Prinzip der Joint Optimization.</p>
+            <p class="h-kern v-light">Wer nur das Tool einführt und hofft, dass sich die Arbeit fügt, erntet Chaos statt Entlastung. Gestalte Rollen, Zuständigkeiten und Lernprozesse ab Tag eins als gleichwertigen Teil des Projekts.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
-          <div class="detail"><h4>Ohne Gestaltung</h4><p>Technologiegetriebene Einführung, ein Tool wird ausgerollt, die Arbeit „passiert" drumherum. Folge: unbeabsichtigte Arbeitsverdichtung, Rollendiffusion, verlorene Feedbackschleifen und ausbleibende Produktivitätsgewinne.</p></div>
+        <div class="acc-body" id="h1-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Ohne Gestaltung</h4><p>Technologiegetriebene Einführung, ein Tool wird ausgerollt, die Arbeit „passiert“ drumherum. Folge: unbeabsichtigte Arbeitsverdichtung, Rollendiffusion, verlorene Feedbackschleifen und ausbleibende Produktivitätsgewinne.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Produktivitätsgewinne, die tatsächlich eintreten, und neue Rollen, die als vollwertige Aufgabe tragen.</p></div>
           <div class="detail"><h4>Evidenz</h4><p>Parker &amp; Grote (2020) zeigen, dass digitale Technik je nach Gestaltung Job-Ressourcen (Autonomie, Kompetenznutzung, Feedback) stärkt oder zerstört, Work-Design-Entscheidungen müssen proaktiv während der Einführung getroffen werden. Kernsatz der soziotechnischen Tradition seit Trist &amp; Bamforth (1951): Wer nur das technische Teilsystem optimiert, suboptimiert das Ganze.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Jedes Projekt bekommt zwei gleichrangige Designstränge: technisch (Tool, Daten) und sozial (Rollen, Prozesse, Qualifizierung), gemeinsam geplant, gemeinsam abgenommen.</li>
-            <li>Vorab klären: Welche Aufgaben verschwinden, welche entstehen neu (Prüfen, Kuratieren, Eskalieren)? Ist die neue Rolle ein vollwertiger Job, oder ein „Restjob"?</li>
+            <li>Vorab klären: Welche Aufgaben verschwinden, welche entstehen neu (Prüfen, Kuratieren, Eskalieren)? Ist die neue Rolle ein vollwertiger Job, oder ein „Restjob“?</li>
             <li>Work-Design-Kriterien als Abnahmekriterien führen, gleichrangig mit technischen KPIs.</li>
           </ul></div>
           <div class="detail"><div class="ask"><p>Würden wir das Projekt auch dann einen Erfolg nennen, wenn die Arbeit der Menschen darin schlechter geworden ist?</p></div></div>
@@ -225,19 +253,20 @@
       </article>
 
       <article class="card" id="h2">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h2-body">
           <span class="h-num">02</span>
           <span class="h-main">
             <span class="h-tag">System</span>
             <h3 class="h-title">Betroffene Mitarbeitende zu Mitgestaltenden machen <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Die Menschen, deren Arbeit sich verändert, sind die <b>wichtigste Wissensquelle</b>, beteilige sie früh, substanziell und mit echtem Einfluss.</p>
+            <p class="h-kern v-full">Die Menschen, deren Arbeit sich verändert, sind die <b>wichtigste Wissensquelle</b>, beteilige sie früh, substanziell und mit echtem Einfluss.</p>
+            <p class="h-kern v-light">Frag die Leute, die den Job täglich machen, statt ihnen KI vom Reißbrett überzustülpen. Wenn Betroffene nicht mitgestalten, wird selbst die beste Lösung im Alltag ignoriert oder boykottiert.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h2-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Top-down eingeführte KI verfehlt die reale Arbeitspraxis und erzeugt Widerstand, Schatten-Nutzung oder stille Sabotage.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Lösungen, die zur realen Arbeitspraxis passen, weil das Wissen der Arbeitsebene einfließt, und eine Einführung, die getragen wird.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Partizipatives Design ist seit Mumfords ETHICS-Methode Kern der Soziotechnik; Parker &amp; Grote (2020) benennen die Befähigung von Beschäftigten und Interessenvertretungen explizit als Interventionsstrategie. Kellogg et al. (2024) zeigen zudem: Junioren können Senioren den KI-Einsatz nicht einfach „von unten" beibringen, Risikokompetenz braucht Domänenexpertise. Eine Stanford-Befragung (1.500 Beschäftigte, 104 Berufe, 2026) illustriert den Wert echter Beteiligung: Häufig waren genau die Aufgaben, die Tech-Fachleute für KI-geeignet hielten, solche, die die Beschäftigten selbst ausdrücklich <em>nicht</em> abgeben wollten.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Partizipatives Design ist seit Mumfords ETHICS-Methode Kern der Soziotechnik; Parker &amp; Grote (2020) benennen die Befähigung von Beschäftigten und Interessenvertretungen explizit als Interventionsstrategie. Kellogg et al. (2024) zeigen zudem: Junioren können Senioren den KI-Einsatz nicht einfach „von unten“ beibringen, Risikokompetenz braucht Domänenexpertise. Eine Stanford-Befragung (1.500 Beschäftigte, 104 Berufe, 2026) illustriert den Wert echter Beteiligung: Häufig waren genau die Aufgaben, die Tech-Fachleute für KI-geeignet hielten, solche, die die Beschäftigten selbst ausdrücklich <em>nicht</em> abgeben wollten. Bakker et al. (2026) liefern die arbeitspsychologische Begründung: Ob KI auferlegt oder selbst gewählt ist, verändert ihre Wirkung auf Arbeitsressourcen systematisch. Beteiligung ist damit Wirkbedingung, nicht Zugeständnis.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Pilotgruppen sind Co-Designer, nicht Testnutzer: Sie definieren mit, welche Aufgaben KI-geeignet sind und woran Erfolg gemessen wird.</li>
             <li>Einwände als Designinformation behandeln, nicht als Change-Widerstand, mit dokumentiertem Verfahren, das ihren Einfluss nachweist.</li>
@@ -248,63 +277,67 @@
       </article>
 
       <article class="card" id="h3">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h3-body">
           <span class="h-num">03</span>
           <span class="h-main">
             <span class="h-tag">System</span>
             <h3 class="h-title">Stärken und Grenzen der KI aufgabenscharf klären <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">KI kann bei Aufgaben, die Menschen als ähnlich schwer empfinden, <b>sehr unterschiedlich gute Ergebnisse</b> liefern (in der Forschung „Jagged Frontier"). Entscheide daher pro Aufgabe, statt pauschal für Prozesse oder Bereiche, wie gut KI zur Unterstützung geeignet ist, und prüfe es empirisch.</p>
+            <p class="h-kern v-full">KI kann bei Aufgaben, die Menschen als ähnlich schwer empfinden, <b>sehr unterschiedlich gute Ergebnisse</b> liefern (in der Forschung „Jagged Frontier“). Entscheide daher pro Aufgabe, statt pauschal für Prozesse oder Bereiche, wie gut KI zur Unterstützung geeignet ist, und prüfe es empirisch.</p>
+            <p class="h-kern v-light">KI glänzt bei Aufgabe A und scheitert leise bei Aufgabe B, selbst wenn beides für uns gleich schwer wirkt. Prüfe die Eignung aufgabengenau und mit echten Testfällen, statt pauschal dem Hype zu glauben.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h3-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>KI ist bei ähnlich schwer wirkenden Aufgaben mal exzellent, mal verlässlich falsch, und sie scheitert <em>leise</em>, mit flüssigen, plausiblen Outputs. Pauschale Rollouts verleiten zum Einsatz jenseits der Kompetenzgrenze.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Treffsichere Auswahl der Anwendungsfälle und eine belastbare Eignungskarte je Aufgabe statt pauschaler Rollouts.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Im BCG-Feldexperiment (Dell'Acqua et al., 2023; 758 Berater) steigerte GPT-4 innerhalb der Grenze die Leistung deutlich. Außerhalb kehrte sich der Effekt um: ohne KI 84 % korrekt, mit KI nur 60–70 %. Die Folgeanalyse „Persuasion Bombing" (Randazzo et al., 2026) zeigt: Beim Hinterfragen gab das Modell seine Grenzen nicht zu, sondern verteidigte den Fehler mit eskalierender Argumentation.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Im BCG-Feldexperiment (Dell’Acqua et al., 2023; 758 Berater) steigerte GPT-4 innerhalb der Grenze die Leistung deutlich. Außerhalb kehrte sich der Effekt um: ohne KI 84 % korrekt, mit KI nur 60–70 %. Die Folgeanalyse „Persuasion Bombing“ (Randazzo et al., 2026) zeigt: Beim Hinterfragen gab das Modell seine Grenzen nicht zu, sondern verteidigte den Fehler mit eskalierender Argumentation.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Aufgabeninventar erstellen und klassifizieren: KI-geeignet / KI mit Prüfpflicht / KI-ungeeignet. Lebendiges Arbeitsmaterial, kein Einmal-Gutachten.</li>
             <li>Eignung empirisch prüfen (Evaluation mit realen Fällen und bekannter Ground Truth), nicht per Intuition oder Anbieterversprechen.</li>
             <li>Verifikation gegen externe Quellen und eigene Fachexpertise, nie gegen das Modell selbst.</li>
+            <li>Die Karte regelmäßig aktualisieren: Die Grenze verschiebt sich mit jeder Modellgeneration.</li>
           </ul></div>
           <div class="detail"><div class="ask"><p>Für welche Kernaufgaben wissen wir, gemessen, nicht gefühlt, wo die Grenze liegt? Und woran erkennt jemand im Alltag, dass er sie überschreitet?</p></div></div>
         </div></div></div>
       </article>
 
       <article class="card" id="h17">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h17-body">
           <span class="h-num">17</span>
           <span class="h-main">
             <span class="h-tag">System</span>
             <h3 class="h-title">Beste Aufgabenteilung zwischen Mensch und KI finden, nicht unterstellen <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Mensch-KI-Synergie entsteht nicht von selbst. Gestalte die Arbeitsteilung so, dass die <b>Kombination besser ist als der bessere der beiden allein</b>, sonst ist sie nur teurer.</p>
+            <p class="h-kern v-full">Mensch-KI-Synergie entsteht nicht von selbst. Gestalte die Arbeitsteilung so, dass die <b>Kombination besser ist als der bessere der beiden allein</b>, sonst ist sie nur teurer.</p>
+            <p class="h-kern v-light">Mensch plus KI ist nicht automatisch ein Dreamteam, sondern oft schlechter als der bessere Einzelne. Kombiniere beide nur dort, wo das Zusammenspiel nachweislich Mehrwert bringt, sonst zahlst du doppelt.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
-          <div class="detail"><h4>Ohne Gestaltung</h4><p>Die Annahme „Mensch + KI schlägt immer beide allein" ist empirisch nicht haltbar. Im Mittel schneiden Kombinationen schlechter ab als der bessere Einzelakteur, besonders bei Entscheidungsaufgaben, wenn die KI allein überlegen ist und der Mensch ihre Vorschläge fehlerhaft filtert (vgl. <a class="hlink" href="#h6">H6</a>). Wer Synergie unterstellt statt sie zu messen, zahlt doppelt: Personalkosten plus Leistungsverlust.</p></div>
+        <div class="acc-body" id="h17-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Ohne Gestaltung</h4><p>Die Annahme „Mensch + KI schlägt immer beide allein“ ist empirisch nicht haltbar. Im Mittel schneiden Kombinationen schlechter ab als der bessere Einzelakteur, besonders bei Entscheidungsaufgaben, wenn die KI allein überlegen ist und der Mensch ihre Vorschläge fehlerhaft filtert (vgl. <a class="hlink" href="#h6">H6</a>). Wer Synergie unterstellt statt sie zu messen, zahlt doppelt: Personalkosten plus Leistungsverlust.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Belegte Komplementarität und gezielte Synergiegewinne dort, wo die Kombination nachweislich trägt.</p></div>
           <div class="detail"><h4>Evidenz</h4><p>Vaccaro, Almaatouq &amp; Malone (2024, Nature Human Behaviour) werteten präregistriert 106 Studien mit 370 Effektstärken aus: im Mittel lagen Mensch-KI-Kombinationen signifikant unter dem besseren Einzelakteur, mit deutlichen Verlusten bei Entscheidungen. Die ermöglichende Seite liegt in der Heterogenität, bei erstellenden Aufgaben und dort, wo der Mensch allein besser ist, entstehen echte Synergiegewinne. Komplementarität ist erreichbar, aber eine Designleistung.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Pro Aufgabe klären, wer allein besser ist, über die Eignungskarte aus <a class="hlink" href="#h3">H3</a>. Ist die KI klar überlegen, die menschliche Rolle neu zuschneiden (Kontext, Ausnahmen, Verantwortung, vgl. <a class="hlink" href="#h4">H4</a>, <a class="hlink" href="#h12">H12</a>) statt eine Pseudo-Prüfung zu inszenieren.</li>
             <li>Kombinationen dort einsetzen, wo Synergie belegt ist: erstellende Aufgaben und solche, in denen menschliche Expertise führt und die KI zuliefert.</li>
-            <li>Synergie als Abnahmekriterium: Mensch + KI gegen beide Einzel-Baselines messen, nicht nur gegen „vorher".</li>
+            <li>Synergie als Abnahmekriterium: Mensch + KI gegen beide Einzel-Baselines messen, nicht nur gegen „vorher“.</li>
           </ul></div>
           <div class="detail"><div class="ask"><p>Für welche unserer Mensch-KI-Prozesse wissen wir gemessen, dass die Kombination besser ist als der bessere der beiden allein, und wo unterstellen wir es nur?</p></div></div>
         </div></div></div>
       </article>
 
       <article class="card" id="h20">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h20-body">
           <span class="h-num">20</span>
           <span class="h-main">
             <span class="h-tag">System</span>
             <h3 class="h-title">Systematisches Experimentieren und Evaluieren als organisationale Fähigkeit aufbauen <span class="h-ev">[indikativ]</span></h3>
-            <p class="h-kern">Behandle systematisches Experimentieren und Evaluieren als <b>organisationale Kerninfrastruktur</b>. Der nachhaltige Vorteil ist nicht das einzelne Werkzeug, sondern die Geschwindigkeit, mit der die Organisation lernt, was funktioniert.</p>
+            <p class="h-kern v-full">Behandle systematisches Experimentieren und Evaluieren als <b>organisationale Kerninfrastruktur</b>. Der nachhaltige Vorteil ist nicht das einzelne Werkzeug, sondern die Geschwindigkeit, mit der die Organisation lernt, was funktioniert.</p>
+            <p class="h-kern v-light">Schluss mit Pilotitis und Bauchgefühl-Entscheidungen: Baue eine feste Test-Routine mit echten Daten auf. Euer Vorsprung liegt nicht im Werkzeug, sondern darin, wie schnell ihr verlässlich lernt, was funktioniert.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
-          <div class="detail"><h4>Ohne Gestaltung</h4><p>Ohne Evaluationsinfrastruktur fallen Entscheidungen nach Anbieterversprechen, Hierarchie („HiPPO") oder Anekdote. Piloten vermehren sich, ohne dass jemand daraus lernt („Pilotitis"); bei jedem Modellwechsel beginnt die Prüfung von vorn. Und ohne psychologische Sicherheit werden gescheiterte Experimente versteckt statt ausgewertet: das teuerste Ergebnis von allen.</p></div>
+        <div class="acc-body" id="h20-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Ohne Gestaltung</h4><p>Ohne Evaluationsinfrastruktur fallen Entscheidungen nach Anbieterversprechen, Hierarchie („HiPPO“) oder Anekdote. Piloten vermehren sich, ohne dass jemand daraus lernt („Pilotitis“); bei jedem Modellwechsel beginnt die Prüfung von vorn. Und ohne psychologische Sicherheit werden gescheiterte Experimente versteckt statt ausgewertet: das teuerste Ergebnis von allen.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Lerngeschwindigkeit als dauerhafter Vorteil und Eignungsprüfungen, die bei jedem Modellwechsel wiederverwendbar sind.</p></div>
           <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: die Kernbelege stammen aus Experimentier- und Teamforschung, nicht aus KI-Einführungen.</em> Kohavi, Tang &amp; Xu (2020) zeigen über zehntausende kontrollierte Experimente, dass die Mehrzahl der für gut befundenen Ideen im Test scheitert, Expertenintuition allein ist unzuverlässig. Thomke (2020) belegt fallstudienbasiert den Vorteil institutionalisierter Experimentierpraxis; Edmondson (1999), dass psychologische Sicherheit Voraussetzung für ehrliches Berichten von Fehlschlägen ist. Schließt direkt an <a class="hlink" href="#h3">H3</a> an.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
@@ -317,6 +350,31 @@
         </div></div></div>
       </article>
 
+      <article class="card" id="h22">
+        <button class="acc-head" aria-expanded="false" aria-controls="h22-body">
+          <span class="h-num">22</span>
+          <span class="h-main">
+            <span class="h-tag">System</span>
+            <h3 class="h-title">Wenn KI das Leichte übernimmt: die verbleibende Last neu bemessen <span class="h-ev">[indikativ]</span></h3>
+            <p class="h-kern v-full">KI übernimmt meist das Leichte und lässt das Dichte beim Menschen. Bemiss die Last der veränderten Arbeit <b>nach Dichte, nicht nach Menge</b>, statt Entlastung aus der eingesparten Zeit abzuleiten.</p>
+            <p class="h-kern v-light">Wenn die Routine wegfällt, bleiben beim Menschen nur noch Ausnahmen, Krisen und schwere Brocken. Miss Arbeitslast nach Dichte, nicht nach Menge, sonst verbrennt das Team an der vermeintlich gesparten Zeit.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body" id="h22-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Ohne Gestaltung</h4><p>Die leichten Anteile waren Puffer: Erholung, Takt und Lernweg für Neue. Im Kundenservice bleiben nur die schweren, oft eskalierten Fälle; in der Wissensarbeit fällt das ruhige Formulieren weg, übrig bleiben Bewerten und Entscheiden. Die Menge sinkt, die Dichte steigt, und weil die Arbeitszeit gleich bleibt, füllt sich gesparte Zeit mit weiterer dichter Arbeit (vgl. <a class="hlink" href="#h21">H21</a>). Kennzahlen und Erwartungen bleiben auf das alte Mischprofil kalibriert. Folge: Erschöpfung, Fehler bei den folgenreichsten Fällen, Fluktuation, und der Einstiegsweg für Neue fällt weg (vgl. <a class="hlink" href="#h9">H9</a>).</p></div>
+          <div class="detail"><h4>Ermöglicht</h4><p>Realistische Kapazitäts- und Zielplanung, tragfähige Rollen um die anspruchsvollen Fälle herum und hohe Qualität dort, wo menschliches Urteil den größten Wert schafft.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: Mechanismus gut verankert, KI-spezifische Ausprägung durch Branchenbeobachtungen und eine Feldstudie belegt.</em> Bainbridge (1983): Automatisierung überlässt dem Menschen die Aufgaben, die sich nicht automatisieren lassen. Das Job-Demands-Resources-Modell (Bakker &amp; Demerouti, 2007) erklärt Erschöpfung durch Anforderungen ohne Ausgleich. Aus dem Kundenservice wird übereinstimmend berichtet, dass leichte Kontakte als Pause wegfallen (Customer Experience Dive, 2026). Ranganathan &amp; Ye (2026): Beschäftigte fühlten sich produktiver, aber nicht weniger beschäftigt.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Lastprofil vorher und nachher erheben: Welche Mischung aus Urteils-, Ausnahme- und belastender Arbeit bleibt?</li>
+            <li>Dichte messen, nicht nur Menge: erlebte Beanspruchung neben Fallzahl und gesparten Stunden, anschlussfähig an die Gefährdungsbeurteilung psychischer Belastung.</li>
+            <li>Mischung bewusst gestalten: leichtere Fälle nach belastenden, Routineanteile beim Menschen, Auslastungsziele neu setzen, Einarbeitung neu denken, wenn einfache Fälle wegfallen.</li>
+            <li>Die schweren Fälle als Kern der Rolle ausstatten: Qualifizierung, Fallbesprechung, Entscheidungsspielraum.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Was ist aus den leichten Stunden des Arbeitstags geworden? Und lässt sich der Tag, so wie er jetzt zusammengesetzt ist, dauerhaft durchhalten?</p></div></div>
+        </div></div></div>
+      </article>
+
     </div>
   </section>
 
@@ -324,19 +382,19 @@
     <div class="cluster-head"><span class="ce">Cluster B</span><h2>Interaktionsgestaltung</h2></div>
     <p class="cluster-sub">Wie der einzelne Mensch im Moment der Nutzung mit der KI zusammenarbeitet, Rollenverteilung, Erwartung, Vertrauen.</p>
     <div class="seam-group">
-
       <article class="card" id="h4">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h4-body">
           <span class="h-num">04</span>
           <span class="h-main">
             <span class="h-tag">Interaktion</span>
             <h3 class="h-title">Den Menschen als Akteur halten, nicht als bloßen Aufpasser <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Gestalte die Arbeitsteilung so, dass der Mensch <b>aktiv urteilt und eingreift</b>, nicht passiv eine weitgehend autonome KI überwacht.</p>
+            <p class="h-kern v-full">Gestalte die Arbeitsteilung so, dass der Mensch <b>aktiv urteilt und eingreift</b>, nicht passiv eine weitgehend autonome KI überwacht.</p>
+            <p class="h-kern v-light">Mach Menschen nicht zu Aufpassern einer autonomen Maschine, denn im passiven Überwachen sind wir notorisch schwach. Halte das Urteilen und Eingreifen aktiv in menschlicher Hand, statt Agenten nur noch nickend durchzuwinken.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
-          <div class="detail"><h4>Ohne Gestaltung</h4><p>Die „Ironie der Automatisierung" (Bainbridge, 1983): Je besser die Automatik, desto mehr schrumpft die Rolle auf Überwachung und Ausnahmebehandlung, Tätigkeiten, in denen Menschen schwach sind (Vigilanzverlust) und für die ihnen zugleich die Übung fehlt. Mit agentischen Systemen, die ganze Prozesse eigenständig orchestrieren, verschärft sich das: Die menschliche Kontrollinstanz wird noch weiter an den Rand gedrängt. Schon die <em>Benennung</em> wirkt: Wird ein Agent als „KI-Mitarbeiter“ statt als Werkzeug gerahmt, entdecken Menschen rund 18 % weniger Fehler (Wiles et al., 2026; vgl. <a class="hlink" href="#h12">H12</a>).</p></div>
+        <div class="acc-body" id="h4-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Ohne Gestaltung</h4><p>Die „Ironie der Automatisierung“ (Bainbridge, 1983): Je besser die Automatik, desto mehr schrumpft die Rolle auf Überwachung und Ausnahmebehandlung, Tätigkeiten, in denen Menschen schwach sind (Vigilanzverlust) und für die ihnen zugleich die Übung fehlt. Mit agentischen Systemen, die ganze Prozesse eigenständig orchestrieren, verschärft sich das: Die menschliche Kontrollinstanz wird noch weiter an den Rand gedrängt. Schon die <em>Benennung</em> wirkt: Wird ein Agent als „KI-Mitarbeiter“ statt als Werkzeug gerahmt, entdecken Menschen rund 18 % weniger Fehler (Wiles et al., 2026; vgl. <a class="hlink" href="#h12">H12</a>).</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Eingriffs- und Urteilsfähigkeit, die im Ausnahmefall wirklich verfügbar ist.</p></div>
           <div class="detail"><h4>Evidenz</h4><p>Parasuraman &amp; Manzey (2010): Automation Complacency tritt unter Mehrfachbelastung auf, betrifft Novizen wie Experten und lässt sich durch bloße Übung nicht beseitigen. Parasuraman, Sheridan &amp; Wickens (2000) liefern das Modell der Automatisierungsstufen, um Automatisierungsgrade differenziert statt binär festzulegen.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
@@ -350,42 +408,44 @@
       </article>
 
       <article class="card" id="h5">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h5-body">
           <span class="h-num">05</span>
           <span class="h-main">
             <span class="h-tag">Interaktion</span>
             <h3 class="h-title">Fähigkeiten, Grenzen und Unsicherheit der KI-Lösung sichtbar machen <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Mache jederzeit klar, <b>was das System kann, wie gut es das kann</b> und wie sicher es sich im konkreten Fall ist.</p>
+            <p class="h-kern v-full">Mache jederzeit klar, <b>was das System kann, wie gut es das kann</b> und wie sicher es sich im konkreten Fall ist.</p>
+            <p class="h-kern v-light">Eloquenz ist keine Kompetenz: Flüssige Sprache täuscht Verlässlichkeit vor, wo keine ist. Zeige bei KI-Lösungen schonungslos, wo das System typischerweise wackelt und wie sicher es sich gerade ist.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h5-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Nutzer bilden ihr mentales Modell aus der Oberfläche: Flüssige Sprache und selbstbewusster Ton erzeugen Kompetenzillusionen weit über die tatsächliche Verlässlichkeit hinaus.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Nutzende, die im Einzelfall angemessen entscheiden, weil ihre Erwartung zur tatsächlichen Leistung passt.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Die ersten beiden der 18 Guidelines von Amershi et al. (2019), „Make clear what the system can do / how well", adressieren genau dieses Erwartungsmanagement (validiert mit 49 Praktikern an 20 Produkten). Lee &amp; See (2004): Angemessenes Vertrauen braucht Information über Zweck, Prozess und Performanz.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Die ersten beiden der 18 Guidelines von Amershi et al. (2019), „Make clear what the system can do / how well“, adressieren genau dieses Erwartungsmanagement (validiert mit 49 Praktikern an 20 Produkten). Lee &amp; See (2004): Angemessenes Vertrauen braucht Information über Zweck, Prozess und Performanz.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Onboarding als Grenzen-Tour statt Feature-Tour: typische Fehlerklassen an realen Beispielen zeigen (Halluzination, veraltetes Wissen, sycophantische Zustimmung).</li>
             <li>Wo möglich Unsicherheits- und Quellenangaben im Interface; wo nicht, prozessuale Marker mit Prüfpflicht.</li>
-            <li>Sprachregelung: Outputs heißen „Entwurf" oder „Hypothese", nicht „Ergebnis".</li>
+            <li>Sprachregelung: Outputs heißen „Entwurf“ oder „Hypothese“, nicht „Ergebnis“.</li>
           </ul></div>
           <div class="detail"><div class="ask"><p>Kann eine durchschnittliche Nutzerin drei typische Fehlerarten des Systems benennen und an einem Beispiel erkennen?</p></div></div>
         </div></div></div>
       </article>
 
       <article class="card" id="h6">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h6-body">
           <span class="h-num">06</span>
           <span class="h-main">
             <span class="h-tag">Interaktion</span>
             <h3 class="h-title">Vertrauen in KI an die tatsächliche Verlässlichkeit anpassen <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Ziel ist nicht möglichst viel Vertrauen in die KI, sondern Vertrauen, das der <b>tatsächlichen Verlässlichkeit entspricht</b>, pro Aufgabentyp.</p>
+            <p class="h-kern v-full">Ziel ist nicht möglichst viel Vertrauen in die KI, sondern Vertrauen, das der <b>tatsächlichen Verlässlichkeit entspricht</b>, pro Aufgabentyp.</p>
+            <p class="h-kern v-light">Weder blinde KI-Gläubigkeit noch reflexhafte Ablehnung bringen dich weiter. Kalibriere das Vertrauen aufgabenscharf: Wo liefert die KI Spitzenwerte und wo greift sie verlässlich daneben?</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h6-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Beide Fehlkalibrierungen sind teuer: Übervertrauen führt zu ungeprüfter Übernahme (Misuse), Untervertrauen dazu, dass nützliche Systeme liegen bleiben (Disuse), oft gleichzeitig, entlang von Erfahrungslinien.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Tatsächliche Nutzung leistungsfähiger Systeme, statt dass nützliche Werkzeuge aus Aversion liegen bleiben.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Lee &amp; See (2004) liefern das Standardmodell: Angemessene Nutzung braucht Kalibrierung und situative Auflösung. Dell'Acqua (2022): Recruiter mit <em>besserer</em> KI (85 %) trafen schlechtere Entscheidungen als die mit schwächerer (75 %), weil sie ihr Urteil abschalteten. Dietvorst et al. (2015) beschreiben den Gegenpol, Algorithm Aversion nach beobachteten Fehlern.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Lee &amp; See (2004) liefern das Standardmodell: Angemessene Nutzung braucht Kalibrierung und situative Auflösung. Dell’Acqua (2022): Recruiter mit <em>besserer</em> KI (85 %) trafen schlechtere Entscheidungen als die mit schwächerer (75 %), weil sie ihr Urteil abschalteten. Dietvorst et al. (2015) beschreiben den Gegenpol, Algorithm Aversion nach beobachteten Fehlern.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Vertrauen aufgabenspezifisch trainieren statt genereller Pro-/Contra-Haltung.</li>
             <li>Fehler erlebbar machen, bevor es zählt: Trainings, in denen Teilnehmer KI-Fehler aktiv finden, kalibrieren besser als Erfolgsdemos.</li>
@@ -396,25 +456,52 @@
       </article>
 
       <article class="card" id="h7">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h7-body">
           <span class="h-num">07</span>
           <span class="h-main">
             <span class="h-tag">Interaktion</span>
             <h3 class="h-title">Mitdenken vor der Ergebnisübernahme erzwingen <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Baue an kritischen Stellen bewusst <b>kognitive Stolperschwellen</b> ein, die eigenes Denken auslösen, bevor der KI-Output übernommen wird.</p>
+            <p class="h-kern v-full">Baue an kritischen Stellen bewusst <b>kognitive Stolperschwellen</b> ein, die eigenes Denken auslösen, bevor der KI-Output übernommen wird.</p>
+            <p class="h-kern v-light">Bequeme Antworten verführen zum Denken auf Sparflamme. Baue gezielte Denkstopps in den Ablauf ein, damit eigene Gedanken stehen, bevor der KI-Vorschlag übernommen wird.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
-          <div class="detail"><h4>Ohne Gestaltung</h4><p>Automation Bias hat zwei Gesichter: Omission Errors (man übersieht, was die KI auslässt) und Commission Errors (man übernimmt, was sie falsch behauptet). Der „kognitive Geizhals" wählt den Weg des geringsten Aufwands, flüssige Outputs machen ihn maximal bequem.</p></div>
+        <div class="acc-body" id="h7-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Ohne Gestaltung</h4><p>Automation Bias hat zwei Gesichter: Omission Errors (man übersieht, was die KI auslässt) und Commission Errors (man übernimmt, was sie falsch behauptet). Der „kognitive Geizhals“ wählt den Weg des geringsten Aufwands, flüssige Outputs machen ihn maximal bequem.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Fehlerentdeckung und Ergebnisqualität, die über dem liegen, was die KI allein erreicht.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Buçinca et al. (2021) zeigen experimentell, dass <em>Cognitive Forcing Functions</em> Overreliance deutlich stärker senken als Erklärbarkeit allein. Das sind Designelemente, die eigenes Urteilen erzwingen: erst selbst entscheiden, dann KI sehen; Antwort verzögern; aktiv anfordern. Microsofts ExtendAI-Studie (CHI 2025) bestätigt: Systeme, die Nutzer erst ihre eigene Überlegung artikulieren lassen, halten kognitives Engagement aufrecht.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Buçinca et al. (2021) zeigen experimentell, dass <em>Cognitive Forcing Functions</em> Overreliance deutlich stärker senken als Erklärbarkeit allein. Das sind Designelemente, die eigenes Urteilen erzwingen: erst selbst entscheiden, dann KI sehen; Antwort verzögern; aktiv anfordern. Microsofts ExtendAI-Studie (CHI 2025) bestätigt: Systeme, die Nutzer erst ihre eigene Überlegung artikulieren lassen, halten kognitives Engagement aufrecht. Rajpal (2026) zeigt für Freelancer die Rollenverschiebung vom Produzieren zum Validieren: Wer nur noch prüft, verliert die Praxis, aus der sich Prüfurteile speisen. Fu et al. (2026) zeigen in zwei randomisierten Feldexperimenten mit 640 Beschäftigten eine dritte Voraussetzung neben Fähigkeit und Aufmerksamkeit: <b>Abrufbarkeit</b>. Selbst formulierte Erklärungen beim Einstieg und wiederkehrende Hinweise, die die Prüfbegründung reaktivieren, halten die Fehlerentdeckung auch bei Routinenutzung aufrecht.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
-            <li>An Entscheidungspunkten mit Konsequenz: „Erst eigene Hypothese, dann KI" als Workflow-Schritt.</li>
+            <li>An Entscheidungspunkten mit Konsequenz: „Erst eigene Hypothese, dann KI“ als Workflow-Schritt.</li>
             <li>Verifikation mit definierter Methode: gegen welche Quelle, mit welcher Stichprobe, durch wen, als benannte Aufgabe mit Zeitbudget.</li>
             <li>Reibung dosieren: Routine darf flüssig sein; Reibung gehört dorthin, wo Fehlerkosten hoch sind.</li>
           </ul></div>
           <div class="detail"><div class="ask"><p>An welchen drei Stellen wäre ein unentdeckter KI-Fehler am teuersten, und was zwingt dort heute zum Hinschauen?</p></div></div>
+        </div></div></div>
+      </article>
+
+      <article class="card" id="h23">
+        <button class="acc-head" aria-expanded="false" aria-controls="h23-body">
+          <span class="h-num">23</span>
+          <span class="h-main">
+            <span class="h-tag">Interaktion</span>
+            <h3 class="h-title">Orchestrierung als Arbeit anerkennen und die Denklast der Zusammenarbeit mit KI begrenzen <span class="h-ev">[indikativ]</span></h3>
+            <p class="h-kern v-full">Zusammenarbeit mit KI erzeugt eigene Arbeit: Stränge koordinieren, Vorschläge bewerten, entscheiden, wann es gut genug ist. Behandle diese <b>Orchestrierung als begrenzte Ressource</b>, nicht als Nebenprodukt der Entlastung.</p>
+            <p class="h-kern v-light">Mehrere KI-Stränge parallel zu jonglieren und Varianten zu vergleichen, ist keine Entlastung, sondern kognitiver Hochleistungssport. Behandle Koordinationsarbeit als begrenzte Ressource und setze klare Abbruchregeln, statt dich im Vorschlagssog zu verlieren.</p>
+          </span>
+          <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc-body" id="h23-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Ohne Gestaltung</h4><p>Der Mensch wird zum einzigen Ort, an dem alle Stränge zusammenlaufen; der Überblick liegt im eigenen Arbeitsgedächtnis. Dazu kommt der Vorschlagssog: Früher war Aufwand die natürliche Abbruchregel, jetzt kostet die nächste Variante nichts, und jedes Aufhören muss aktiv entschieden werden. Das Sparring, das <a class="hlink" href="#h8">H8</a> empfiehlt, hat seinen Preis. Die Arbeit fühlt sich produktiv an, die Erschöpfung kommt verzögert.</p></div>
+          <div class="detail"><h4>Ermöglicht</h4><p>Anspruchsvolles Sparring mit KI auf dauerhaft hohem Niveau, fokussiertere Urteile und KI als Denkverstärker ohne Erschöpfung.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: kognitive Grundmechanismen fundiert, KI-spezifische Befunde aus Befragung, Feldstudie und Praxisberichten.</em> Das Arbeitsgedächtnis ist eng begrenzt (Cowan, 2001), Koordination verdrängt Kapazität für die eigentliche Aufgabe (Sweller, 1988), zu viele Optionen erschweren Entscheidungen (Iyengar &amp; Lepper, 2000). Eine BCG-Befragung von 1.488 Beschäftigten (Bedard et al., 2026) fand die Aufsicht über KI am belastendsten, verstärkt ab drei parallelen Agenten; Ranganathan &amp; Ye (2026) beschreiben wachsende Zahlen offener Stränge bei gefühlter Produktivität.</p></div>
+          <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Parallelität bewusst wählen: offene KI-Stränge begrenzen, bei anspruchsvollen Themen sequenziell vor parallel, Entscheidungs-Gates statt Daueraufsicht (vgl. <a class="hlink" href="#h4">H4</a>).</li>
+            <li>Den Überblick auslagern: Arbeitsstand, Entscheidungen und Kontext in einem gemeinsamen Dokument halten, nicht im Kopf.</li>
+            <li>Abbruchkriterien vorab festlegen: Was ist „gut genug“? Vorschläge der KI sind Angebote, keine Aufgaben.</li>
+            <li>Sparring dosieren: intensiv, wo es Urteile verbessert (<a class="hlink" href="#h8">H8</a>), kein Dauerdialog bei Routine.</li>
+            <li>Orchestrierung als Arbeit planen und als Kompetenz vermitteln, mit Pausen nach intensiven Phasen.</li>
+          </ul></div>
+          <div class="detail"><div class="ask"><p>Wer entscheidet, wann es gut genug ist: wir oder der nächste Vorschlag der KI?</p></div></div>
         </div></div></div>
       </article>
 
@@ -425,24 +512,24 @@
     <div class="cluster-head"><span class="ce">Cluster C</span><h2>Kognition und Kompetenzerhalt</h2></div>
     <p class="cluster-sub">Was KI-Nutzung über die Zeit mit dem Denken und den Fähigkeiten der Menschen macht, und wie man dem entgegenwirkt.</p>
     <div class="seam-group">
-
       <article class="card" id="h8">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h8-body">
           <span class="h-num">08</span>
           <span class="h-main">
             <span class="h-tag">Kognition</span>
             <h3 class="h-title">Menschliches Denken fördern statt auslagern <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Gestalte Prozesse so, dass KI das Denken <b>verlängert und herausfordert, nicht ersetzt</b>. Generieren vor Konsumieren.</p>
+            <p class="h-kern v-full">Gestalte Prozesse so, dass KI das Denken <b>verlängert und herausfordert, nicht ersetzt</b>. Generieren vor Konsumieren.</p>
+            <p class="h-kern v-light">Nutze KI als Sparringspartner, der dein Denken schärft, nicht als bequemen Ersatz. Wer nur noch fertige Antworten konsumiert statt selbst zu generieren, verliert schleichend die eigene Urteilskraft.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h8-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Die bequeme Verfügbarkeit fertiger Lösungen verschiebt die Tätigkeit von Denken zu Übernehmen. Es droht ein Kreislauf: mehr Offloading → weniger Übung → geringere eigene Fähigkeit → noch mehr Offloading. Hinzu kommt eine metakognitive Falle: Während die unassistierte Fähigkeit sinkt, <em>steigt</em> oft die subjektive Kompetenzeinschätzung, man hält sich für besser, was das Problem unsichtbar macht.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>KI als Denkverstärker und Sparringspartner, der eigene Urteile schärft statt sie zu ersetzen.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Gerlich (2025; N = 666) findet eine signifikant negative Korrelation zwischen häufiger KI-Nutzung und kritischem Denken, mediiert durch Cognitive Offloading. Lee et al. (CHI 2025; 319 Wissensarbeiter): Vertrauen in die KI geht mit <em>weniger</em> kritischem Denken einher, Vertrauen in die eigene Expertise mit <em>mehr</em>. Für kreative Aufgaben zeigen Doshi &amp; Hauser (2024), dass KI-Ideen die individuelle Kreativität heben, die Ergebnisse über Personen hinweg aber einander ähnlicher machen, und dass ein früher KI-Einstieg den Lösungsraum stärker verengt („Fixierung“) als ein später. Einordnung: vieles ist korrelativ/selbstberichtet, Grund für Vorsicht im Design, nicht für Alarmismus.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Gerlich (2025; N = 666) findet eine signifikant negative Korrelation zwischen häufiger KI-Nutzung und kritischem Denken, mediiert durch Cognitive Offloading. Lee et al. (CHI 2025; 319 Wissensarbeiter): Vertrauen in die KI geht mit <em>weniger</em> kritischem Denken einher, Vertrauen in die eigene Expertise mit <em>mehr</em>. Für kreative Aufgaben zeigen Doshi &amp; Hauser (2024), dass KI-Ideen die individuelle Kreativität heben, die Ergebnisse über Personen hinweg aber einander ähnlicher machen, und dass ein früher KI-Einstieg den Lösungsraum stärker verengt („Fixierung“) als ein später. Zuin &amp; Donadel (2026) ergänzen Entscheidungsmüdigkeit als Moderator: Nicht nur die Haltung der Person entscheidet über kritische Prüfung, sondern die Belastungslage, in der sie auf das System trifft. Einordnung: vieles ist korrelativ/selbstberichtet, Grund für Vorsicht im Design, nicht für Alarmismus.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Sequenzregel für Denkaufgaben: eigene These zuerst, KI danach als Sparringspartner und Lückenfinder.</li>
-            <li>KI als „Verlängerung des Denkens" prompten: Gegenpositionen, Schwachstellen, sokratische Fragen, statt „mach mir fertig".</li>
+            <li>KI als „Verlängerung des Denkens“ prompten: Gegenpositionen, Schwachstellen, sokratische Fragen, statt „mach mir fertig“.</li>
             <li>Fachexpertise als Schutzfaktor aufbauen; in Lernphasen (Junioren, neue Domänen) bewusst KI-reduzierte Aufgabenanteile.</li>
             <li>Bei kreativen Aufgaben: erst eigener, divergenter Ideenraum ohne KI, dann KI zur Ausarbeitung, schützt vor Fixierung und erhält das Gefühl eigener Urheberschaft.</li>
           </ul></div>
@@ -451,23 +538,24 @@
       </article>
 
       <article class="card" id="h9">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h9-body">
           <span class="h-num">09</span>
           <span class="h-main">
             <span class="h-tag">Kognition</span>
             <h3 class="h-title">Mitarbeiter:innen-Fähigkeiten als kritisches Asset behandeln und aktiv erhalten <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Behandle Fähigkeiten, die durch KI seltener geübt werden, wie <b>kritische Infrastruktur</b>: inventarisieren, trainieren, regelmäßig prüfen.</p>
+            <p class="h-kern v-full">Behandle Fähigkeiten, die durch KI seltener geübt werden, wie <b>kritische Infrastruktur</b>: inventarisieren, trainieren, regelmäßig prüfen.</p>
+            <p class="h-kern v-light">Kompetenzen, die die KI übernimmt, verkümmern ohne Übung schneller, als man denkt, und fehlen genau dann, wenn das System ausfällt. Behandle Kernfähigkeiten wie Notstromaggregate: Halte sie durch bewusstes manuelles Training einsatzbereit.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h9-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Fähigkeiten, die nicht geübt werden, verfallen, und genau die, die KI im Normalfall übernimmt, braucht der Mensch im Ausnahmefall (Ausfall, Grenzfall, Qualitätskontrolle). Die Automatik entzieht die Übung für die Rolle, die sie dem Menschen zuweist. Hinzu kommt eine organisationale, generationale Variante <em>(indikativ)</em>: Werden Einstiegs- und Junior-Rollen weitgehend automatisiert, fehlen in einigen Jahren die erfahrenen Fachkräfte, die aus durchlaufener Praxis heraus komplexe Verantwortung tragen können: Die Erfahrungs-Pipeline reißt.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Expertise, die als Wettbewerbsfaktor verfügbar bleibt, und Menschen, die KI-Ergebnisse souverän beurteilen können.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Budzyń et al. (2025, Lancet Gastroenterol Hepatol): An vier Endoskopie-Zentren sank die Adenom-Detektionsrate in KI-freien Untersuchungen nach Einführung der KI um rund 6 Prozentpunkte (Vergleich der drei Monate vor und nach Einführung), ein Hinweis auf Deskilling mit patientenrelevantem Endpunkt. Die Luftfahrt beantwortet dasselbe Muster (Autopilot) mit verpflichtendem manuellem Training.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Budzyń et al. (2025, Lancet Gastroenterol Hepatol): An vier Endoskopie-Zentren sank die Adenom-Detektionsrate in KI-freien Untersuchungen nach Einführung der KI um rund 6 Prozentpunkte (Vergleich der drei Monate vor und nach Einführung), ein Hinweis auf Deskilling mit patientenrelevantem Endpunkt. Die Luftfahrt beantwortet dasselbe Muster (Autopilot) mit verpflichtendem manuellem Training. Oviedo-Trespalacios et al. (2026) zeigen aus 38 Interviews mit Wissensarbeitenden, dass Upskilling gegen Deskilling zu grob unterscheidet: Neben Aufbau, Erhalt und Erosion tritt <b>Neubewertung</b>, die Wertigkeit von Fähigkeiten verschiebt sich, statt dass sie verfallen. Haverkamp et al. (2026) dokumentieren dieselbe Spannung deutschsprachig für ärztliche Kompetenz. Davies (2026) modelliert den Mechanismus: Selbst bearbeiten kostet Anstrengung und baut Fähigkeit auf, delegieren spart Anstrengung und baut nichts auf. Mit KI muss die Aufgabengestaltung aktiv umgebaut werden, sonst entfällt der Kompetenzaufbau. Nebenbefund gegen die Nivellierungsthese: Leistungsstarke lernen dann schneller, Leistungsschwächere langsamer.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Skill-Inventar je Rolle: Welche Fähigkeiten trägt künftig die KI? Welche davon sind im Stör-/Grenzfall unverzichtbar? Das ist die Erhaltungs-Agenda.</li>
-            <li>KI-freie Praxis institutionalisieren: rotierende „Manual Days" als legitimer Arbeitsbestandteil, nicht als Ineffizienz.</li>
-            <li>Nachwuchs gesondert denken, wer Fähigkeiten nie aufgebaut hat, kann sie nicht „erhalten".</li>
+            <li>KI-freie Praxis institutionalisieren: rotierende „Manual Days“ als legitimer Arbeitsbestandteil, nicht als Ineffizienz.</li>
+            <li>Nachwuchs gesondert denken, wer Fähigkeiten nie aufgebaut hat, kann sie nicht „erhalten“.</li>
             <li>Erfahrungs-Pipeline erhalten: beim Automatisieren von Einstiegsaufgaben mitdenken, wie künftige Senior-Kompetenz überhaupt noch entsteht <em>(indikativ)</em>.</li>
             <li>Frühindikator: Qualität der Arbeit <em>ohne</em> Assistenz stichprobenhaft messen.</li>
           </ul></div>
@@ -482,48 +570,49 @@
     <div class="cluster-head"><span class="ce">Cluster D</span><h2>Soziale &amp; organisationale Effekte</h2></div>
     <p class="cluster-sub">Was KI mit Kultur, Reputation, Autonomie und Verantwortung in der Organisation macht, und wie Governance wirksam bleibt.</p>
     <div class="seam-group">
-
       <article class="card" id="h10">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h10-body">
           <span class="h-num">10</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">Offene KI-Nutzungskultur schaffen <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Mache transparente KI-Nutzung zur <b>respektierten Norm</b>, sonst entsteht verdeckte Nutzung ohne Qualitätssicherung, Lernen und Governance.</p>
+            <p class="h-kern v-full">Mache transparente KI-Nutzung zur <b>respektierten Norm</b>, sonst entsteht verdeckte Nutzung ohne Qualitätssicherung, Lernen und Governance.</p>
+            <p class="h-kern v-light">Wer KI-Nutzung stigmatisiert, zwingt Mitarbeitende in die heimliche Schatten-Nutzung ohne jede Qualitätskontrolle. Mache transparenten Einsatz zum respektierten Standard: Vorleben schlägt Verschweigen.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h10-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>KI-Nutzung ist sozial nicht neutral: Wer sie offenlegt, riskiert, als weniger kompetent und fauler zu gelten. Die rationale Einzelreaktion ist Verschweigen, und die Organisation verliert Sichtbarkeit genau dort, wo sie Qualitätssicherung und Lernen bräuchte (Schatten-KI).</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Kollektives Lernen, Verbreitung guter Nutzungspraxis und Governance, die tatsächlich greift.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Reif, Larrick &amp; Soll (2025, PNAS; 4 Experimente, &gt; 4.400 Teilnehmer): eine <em>Social Evaluation Penalty</em>, KI-Nutzer werden als fauler und weniger kompetent bewertet; im Hiring-Experiment seltener eingestellt. Zwei Hebel: Die Abwertung verschwindet, wenn Bewertende selbst KI nutzen, und sinkt, wenn KI für die Aufgabe offensichtlich nützlich ist.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Reif, Larrick &amp; Soll (2025, PNAS; 4 Experimente, &gt; 4.400 Teilnehmer): eine <em>Social Evaluation Penalty</em>, KI-Nutzer werden als fauler und weniger kompetent bewertet; im Hiring-Experiment seltener eingestellt. Zwei Hebel: Die Abwertung verschwindet, wenn Bewertende selbst KI nutzen, und sinkt, wenn KI für die Aufgabe offensichtlich nützlich ist. McGregor et al. (2026) zeigen am Kinderschutz, dass verdeckte Nutzung auch in hochregulierten Feldern mit Personenbezug entsteht: Strenge Regeln verhindern Schattennutzung nicht, sie verlagern sie weiter in die Unsichtbarkeit.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Führungskräfte legen die eigene KI-Nutzung konkret offen, der stärkste Hebel, da Bewertende mit eigener Erfahrung nicht abwerten.</li>
-            <li>Normen statt Beichten: klare Konventionen, wann KI-Nutzung erwartet und kennzeichnungspflichtig ist, Offenlegung als „geprüft von", nicht „zugegeben".</li>
-            <li>Anreizsysteme prüfen: Wird irgendwo implizit „eigenhändig = wertvoller" signalisiert?</li>
+            <li>Normen statt Beichten: klare Konventionen, wann KI-Nutzung erwartet und kennzeichnungspflichtig ist, Offenlegung als „geprüft von“, nicht „zugegeben“.</li>
+            <li>Anreizsysteme prüfen: Wird irgendwo implizit „eigenhändig = wertvoller“ signalisiert?</li>
             <li>Schatten-Nutzung als Symptom lesen, nicht als Schuld des Mitarbeiters.</li>
           </ul></div>
-          <div class="detail"><div class="ask"><p>Würde jemand in einem wichtigen Meeting sagen „diesen Entwurf hat die KI erstellt, ich habe X und Y geprüft", ohne Reputationssorge?</p></div></div>
+          <div class="detail"><div class="ask"><p>Würde jemand in einem wichtigen Meeting sagen „diesen Entwurf hat die KI erstellt, ich habe X und Y geprüft“, ohne Reputationssorge?</p></div></div>
         </div></div></div>
       </article>
 
       <article class="card" id="h11">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h11-body">
           <span class="h-num">11</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">Motivierende Arbeit erhalten: KI nicht zur Überwachung nutzen, Autonomie und sinnvolle Aufgaben bewahren <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Nutze KI, um <b>Handlungsspielräume zu erweitern</b>, und ziehe harte Grenzen gegen die schleichende Umnutzung zur Verhaltensüberwachung.</p>
+            <p class="h-kern v-full">Nutze KI, um <b>Handlungsspielräume zu erweitern</b>, und ziehe harte Grenzen gegen die schleichende Umnutzung zur Verhaltensüberwachung.</p>
+            <p class="h-kern v-light">Nutze KI, um Handlungsspielräume zu vergrößern, niemals um Beschäftigte durch die Hintertür zu vermessen. Wenn das System zur Überwachung mutiert und dem Menschen nur sinnentleerte Reste bleiben, stirbt jede Motivation.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h11-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Dieselbe Dateninfrastruktur, die Workflows verbessert, kann Beschäftigte granular vermessen. Monitoring erhöht Job-Demands, senkt Autonomie und Vertrauen, und vergiftet die Offenheit aus <a class="hlink" href="#h10">Heuristik 10</a>. Zweiter Qualitätskiller: Übernimmt KI die interessanten Teile, bleiben sinnentleerte Resttätigkeiten.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Erweiterte Handlungsspielräume und KI-Unterstützung, über deren Umfang Mitarbeitende selbst mitentscheiden.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Parker &amp; Grote (2020) dokumentieren beide Pfade: Digitale Technik kann Job-Ressourcen stärken oder schwächen und Demands wie Performance-Monitoring erhöhen. Die Job-Design-Forschung seit Hackman &amp; Oldham zeigt robust: Autonomie und Aufgabenidentität treiben Motivation, Leistung und Proaktivität. Eine qualitative Fallstudie (Monod et al., 2024, Information and Organization) zeigt an einem Vertriebsunternehmen, wie sich dieser Kipppunkt im Zeitverlauf tatsächlich vollzieht: Ein KI-Tool, ursprünglich auf Mitarbeiter-Empowerment ausgelegt, verschob sich schrittweise zu einem Instrument der Managementkontrolle, weil Führungskräfte die neu verfügbaren Daten zunehmend für sich nutzten. Einordnung: Einzelfallstudie, illustriert den Mechanismus, ersetzt keine Breitenevidenz.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Parker &amp; Grote (2020) dokumentieren beide Pfade: Digitale Technik kann Job-Ressourcen stärken oder schwächen und Demands wie Performance-Monitoring erhöhen. Die Job-Design-Forschung seit Hackman &amp; Oldham zeigt robust: Autonomie und Aufgabenidentität treiben Motivation, Leistung und Proaktivität. Eine qualitative Fallstudie (Monod et al., 2024, Information and Organization) zeigt an einem Vertriebsunternehmen, wie sich dieser Kipppunkt im Zeitverlauf tatsächlich vollzieht: Ein KI-Tool, ursprünglich auf Mitarbeiter-Empowerment ausgelegt, verschob sich schrittweise zu einem Instrument der Managementkontrolle, weil Führungskräfte die neu verfügbaren Daten zunehmend für sich nutzten. Einordnung: Einzelfallstudie, illustriert den Mechanismus, ersetzt keine Breitenevidenz. Bakker et al. (2026) führen die Befundlage im JD-R-Rahmen zusammen; Ning et al. (2026) zeigen für Plattformarbeit, dass bereits die <em>wahrgenommene</em> algorithmische Kontrolle psychische Belastung erzeugt. Auch der Eindruck von Überwachung wirkt, nicht erst die Überwachung selbst.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Zweckbindung als Designentscheidung: festlegen und zusichern, welche Nutzungsdaten <em>nicht</em> zur Leistungsbewertung dienen.</li>
-            <li>Aufgaben so schneiden, dass ganze, sinnvolle Arbeitsstücke beim Menschen bleiben, nicht die „Filetstücke" an die KI.</li>
+            <li>Aufgaben so schneiden, dass ganze, sinnvolle Arbeitsstücke beim Menschen bleiben, nicht die „Filetstücke“ an die KI.</li>
             <li>Wahlfreiheit, wo möglich: Mitentscheiden über das Maß an KI-Unterstützung ist selbst eine Job-Ressource.</li>
             <li>Geteilte Daten in Lern- statt Kontrolllogik: Fehler verbessern das System, bewerten keine Personen.</li>
           </ul></div>
@@ -532,17 +621,18 @@
       </article>
 
       <article class="card" id="h12">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h12-body">
           <span class="h-num">12</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">Verantwortung real zuweisen, nicht nur auf dem Papier <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Für jede KI-gestützte Entscheidung mit Konsequenzen muss ein Mensch <b>benannt, befähigt und befugt</b> sein, sie zu verantworten, real, nicht auf dem Papier.</p>
+            <p class="h-kern v-full">Für jede KI-gestützte Entscheidung mit Konsequenzen muss ein Mensch <b>benannt, befähigt und befugt</b> sein, sie zu verantworten, real, nicht auf dem Papier.</p>
+            <p class="h-kern v-light">Ein Mensch kann Verantwortung nur tragen, wenn er echte Prüfzeit, Kompetenz und Veto-Macht besitzt. Verhindere Haftungsknautschzonen: Niemand darf den Kopf für KI-Fehler hinhalten, die er realistisch nicht verhindern konnte.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
-          <div class="detail"><h4>Ohne Gestaltung</h4><p>Zwei Entartungen: die <em>Moral Crumple Zone</em> (Elish, 2019): der Mensch dient als Haftungsknautschzone für Systemfehler, die er nicht verhindern konnte; und symbolische Oversight: ein „Human in the Loop"-Etikett legitimiert Entscheidungen, die mangels Zeit oder Kompetenz nicht wirklich geprüft werden.</p></div>
+        <div class="acc-body" id="h12-body"><div class="inner"><div class="body-pad">
+          <div class="detail"><h4>Ohne Gestaltung</h4><p>Zwei Entartungen: die <em>Moral Crumple Zone</em> (Elish, 2019): der Mensch dient als Haftungsknautschzone für Systemfehler, die er nicht verhindern konnte; und symbolische Oversight: ein „Human in the Loop“-Etikett legitimiert Entscheidungen, die mangels Zeit oder Kompetenz nicht wirklich geprüft werden.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Handlungsfähigkeit auch in konsequenzreichen Anwendungen, weil Verantwortung real getragen werden kann.</p></div>
           <div class="detail"><h4>Evidenz</h4><p>Elish (2019) entwickelt das Crumple-Zone-Konzept aus Fallanalysen. Parasuraman &amp; Manzey (2010) erklären, warum bloße Anwesenheit keine Kontrolle garantiert. Art. 14 der EU-KI-Verordnung verlangt für Hochrisikosysteme <em>wirksame</em> menschliche Aufsicht, Wirksamkeit ist Designanforderung, nicht Organisationsfolklore. Einen experimentellen Beleg liefern Wiles et al. (2026, randomisiertes Experiment, 1.261 Manager): Wird KI als „Mitarbeiter“ statt als Werkzeug gerahmt, sinkt die gefühlte Eigenverantwortung, fragwürdige Arbeit wird rund 44 % häufiger nach oben eskaliert und ~18 % weniger Fehler werden entdeckt, ohne dass die Akzeptanz steigt.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
@@ -557,16 +647,17 @@
       </article>
 
       <article class="card" id="h13">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h13-body">
           <span class="h-num">13</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">Beziehungs- und Vertrauenskommunikation menschlich halten <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Setze KI <b>nicht als Verfasser</b> ein, wo der Wert der Nachricht darin liegt, dass ein Mensch sie gemeint hat, und lass KI das Kommunikationsvolumen nicht aufblähen.</p>
+            <p class="h-kern v-full">Setze KI <b>nicht als Verfasser</b> ein, wo der Wert der Nachricht darin liegt, dass ein Mensch sie gemeint hat, und lass KI das Kommunikationsvolumen nicht aufblähen.</p>
+            <p class="h-kern v-light">Lob, Kritik und Anteilnahme verlieren deutlich an Wert, wenn spürbar wird, dass ein Prompt sie generiert hat. Halte Beziehungsmomente konsequent menschlich und blähe die Kommunikation nicht mit synthetischem Text auf.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h13-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Zwei Mechanismen. Erkennt der Empfänger, dass eine wertschätzende oder motivierende Botschaft von einer KI stammt, sinkt die wahrgenommene Aufrichtigkeit deutlich; Beziehungen kühlen ab („synthetische Empathie“). Verschärft durch den <em>Perception Gap</em>: Die eigene KI-Nutzung wird milde beurteilt, die von Vorgesetzten strenger. Zweitens die Text-Schwemme: KI verbilligt das Schreiben, Menge und Länge steigen, Tiefe und gemeinsames Verständnis sinken.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Glaubwürdigkeit der Führung, die belastbar bleibt, und KI-Entlastung dort, wo es um Sachinhalte geht.</p></div>
           <div class="detail"><h4>Evidenz</h4><p>Coman &amp; Cardon (2025, 1.100 Berufstätige): Wird Führungskommunikation als stark KI-gestützt wahrgenommen, fällt der Anteil, der die Führungskraft als aufrichtig einschätzt, von rund 83 % (geringe KI-Hilfe) auf etwa 40–52 % (hohe KI-Hilfe). Geringe Assistenz (z. B. Grammatik) ist unkritisch, hohe bei beziehungsorientierten Botschaften nicht. Einordnung: szenariobasierte Bewertungsexperimente, die Richtung ist robust, anschlussfähig an <a class="hlink" href="#h10">Heuristik 10</a>.</p></div>
@@ -581,16 +672,17 @@
       </article>
 
       <article class="card" id="h14">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h14-body">
           <span class="h-num">14</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">Menschliche Kontakte schützen und kein „asoziales System“ bauen <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">Gestalte KI so, dass sie menschliche Zusammenarbeit <b>ergänzt statt ersetzt</b>, und behalte Wohlbefinden als Wirkgröße im Blick, nicht nur Produktivität.</p>
+            <p class="h-kern v-full">Gestalte KI so, dass sie menschliche Zusammenarbeit <b>ergänzt statt ersetzt</b>, und behalte Wohlbefinden als Wirkgröße im Blick, nicht nur Produktivität.</p>
+            <p class="h-kern v-light">Wenn der Arbeitstag nur noch aus Dialogen mit Algorithmen besteht, schleichen sich Isolation und Erschöpfung ein. Schütze echte Begegnungen und Team-Routinen bewusst vor dem Wegrationalisieren.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h14-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Besteht der Arbeitstag zunehmend aus Mensch-KI- statt Mensch-Mensch-Interaktion, kann ein „asoziales System“ entstehen: Soziale Affiliation fällt weg, Einsamkeit und soziale Deprivation nehmen zu, mit Spillover-Effekten auf Schlaf und Erholung. Besonders sensibel reagieren Menschen mit ausgeprägter Bindungsangst.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Kollegialität und Bindung, die erhalten bleiben, und Wohlbefinden als Voraussetzung dauerhafter Leistung.</p></div>
           <div class="detail"><h4>Evidenz</h4><p>Tang et al. (2023, Journal of Applied Psychology): vier Feldstudien in vier Kulturkreisen (Taiwan, Indonesien, USA, Malaysia; N = 794) zeigen einen konsistenten Zusammenhang zwischen häufiger KI-Interaktion und Einsamkeit sowie, darüber vermittelt, Schlafstörungen und teils erhöhtem Alkoholkonsum; zugleich tritt kompensatorisch mehr Hilfsverhalten auf. Einordnung: Korrelations- und kurze Feldbefunde, kein Langzeit-Kausalnachweis, Achtsamkeit im Design, kein Alarmismus.</p></div>
@@ -605,42 +697,45 @@
       </article>
 
       <article class="card" id="h15">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h15-body">
           <span class="h-num">15</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">Workslop vermeiden: Aufwand nicht auf Kolleg:innen abwälzen <span class="h-ev">[indikativ]</span></h3>
-            <p class="h-kern">Maßstab ist der <b>tatsächliche Wertbeitrag pro Aufgabe</b>, nicht das bloße Nutzungsvolumen. Das gilt für die Steuerung durch die Organisation und für die Entscheidung jeder einzelnen Person.</p>
+            <p class="h-kern v-full">Maßstab ist der <b>tatsächliche Wertbeitrag pro Aufgabe</b>, nicht das bloße Nutzungsvolumen. Das gilt für die Steuerung durch die Organisation und für die Entscheidung jeder einzelnen Person.</p>
+            <p class="h-kern v-light">Nur weil ein Entwurf in zwei Sekunden fertig ist, spart das keine Zeit, wenn Kolleg:innen stundenlang KI-Floskeln reparieren müssen. Steuere nach tatsächlichem Wertbeitrag, nicht nach Token-Verbrauch oder Nutzungsstatistiken.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h15-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Zwei Mechanismen. <b>(a) Fehlsteuerung von oben:</b> Direktiven, KI „maximal“ zu nutzen, per Leaderboard oder Quote, machen Nutzung zum Selbstzweck; die Folge ist teure Reflex-Nutzung und ausbleibender Wertnachweis. <b>(b) Aufwandsverlagerung von unten:</b> Menschen greifen zu KI, wenn es <em>ihnen</em> Arbeit erspart, auch wenn die einfache Lösung günstiger und zuverlässiger wäre. Eine benannte Ausprägung ist <em>Workslop</em>: polierte, aber substanzarme Ausgaben, deren Nachbesserung stromabwärts auf die Kolleg:innen fällt.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>KI-gestützte Arbeitsergebnisse, denen Kolleg:innen vertrauen, und Menschen, die begründet für und gegen KI entscheiden.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: beobachtungsgestützt, keine systematische Studienlage.</em> Die <em>Workslop</em>-Umfrage (Niederhoffer et al., 2025, HBR; BetterUp Labs und Stanford Social Media Lab, 1.150 Beschäftigte) liefert Größenordnungen: 40 % im Vormonat betroffen, knapp zwei Stunden Nachbearbeitung pro Vorfall. Hinzu kommt interpersonaler Schaden: rund die Hälfte hält Absender von Workslop für weniger fähig und vertrauenswürdig. Selbstbericht/Umfrage (indikativ), aber konsistent mit H8 und H13.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: beobachtungsgestützt, keine systematische Studienlage.</em> Zu (a): Nutzungs-Ranglisten führten zu Token-Verbrauch für Trivialaufgaben (Cox, 2026, 404 Media), 13 % der Befragten täuschen KI-Nutzung nur vor (Writer &amp; Workplace Intelligence, 2026), und rund 37 % der gesparten Zeit gehen für Nacharbeit verloren (Workday, 2026). Zu (b): Die <em>Workslop</em>-Umfrage (Niederhoffer et al., 2025, HBR; BetterUp Labs und Stanford Social Media Lab, 1.150 Beschäftigte) liefert Größenordnungen: 40 % im Vormonat betroffen, knapp zwei Stunden Nachbearbeitung pro Vorfall. Hinzu kommt interpersonaler Schaden: rund die Hälfte hält Absender von Workslop für weniger fähig und vertrauenswürdig. Selbstbericht/Umfrage (indikativ), aber konsistent mit H8 und H13.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
+            <li>Wert messen, nicht Nutzung: keine Quoten, Ranglisten oder Token-Zahlen als Ziel oder in Beurteilungen; Nettowert statt Bruttozeitersparnis.</li>
             <li>Qualitätsmaßstab vor Weitergabe: Wer KI-Output weiterreicht, verantwortet dessen Substanz und lädt die Prüfarbeit nicht bei den Empfangenden ab (Brücke zu <a class="hlink" href="#h8">H8</a>, <a class="hlink" href="#h10">H10</a>).</li>
             <li>Kosten-/Nutzen-Heuristik pro Aufgabentyp: „lohnt KI hier gegenüber der einfachen Lösung?“, Größenordnungen sichtbar machen.</li>
             <li>Befähigung zum „Wann <em>nicht</em> KI“, fachlich, ökonomisch und mit Blick auf den eigenen Lernerhalt (vgl. <a class="hlink" href="#h8">H8</a>, <a class="hlink" href="#h9">H9</a>).</li>
           </ul></div>
-          <div class="detail"><div class="ask"><p>Wüsste eine Mitarbeiterin im Einzelfall, wann die einfache, selbst erledigte Lösung die bessere ist, und wer trägt am Ende den Aufwand, den sie sich mit einem schnellen KI-Output erspart?</p></div></div>
+          <div class="detail"><div class="ask"><p>Messen wir, wie viel KI genutzt wird, oder was sie bringt? Wüsste eine Mitarbeiterin im Einzelfall, wann die einfache, selbst erledigte Lösung die bessere ist, und wer trägt am Ende den Aufwand, den sie sich mit einem schnellen KI-Output erspart?</p></div></div>
         </div></div></div>
       </article>
 
       <article class="card" id="h16">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h16-body">
           <span class="h-num">16</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">Tempo und Regeneration schützen: die „schlaflose KI“ nicht zum Taktgeber machen <span class="h-ev">[indikativ]</span></h3>
-            <p class="h-kern">Gestalte den KI-Einsatz so, dass das <b>Tempo der Maschine nicht zum Maßstab für den Menschen</b> wird, und schütze Regeneration, Reflexions- und Reifezeiten bewusst.</p>
+            <p class="h-kern v-full">Gestalte den KI-Einsatz so, dass das <b>Tempo der Maschine nicht zum Maßstab für den Menschen</b> wird, und schütze Regeneration, Reflexions- und Reifezeiten bewusst.</p>
+            <p class="h-kern v-light">Die Maschine wird nie müde, Menschen dagegen schon. Lass das Ausgabetempo der KI nicht zum Arbeitstakt für dein Team werden; echtes Lernen und Urteilen brauchen Reifezeit.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h16-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>KI kennt keine Müdigkeit und arbeitet rund um die Uhr. Daraus entstehen zwei Druckrichtungen: ein subtiler Beschleunigungsdruck samt Erwartung permanenter menschlicher Verfügbarkeit, und weil die Letztverantwortung beim Menschen bleibt, die Last, die maschinelle Flut fortlaufend zu prüfen und zu verantworten. Gerade diese Kombination kann psychisch belasten, bis hin zu Erschöpfung. Zudem brauchen Lernen und Veränderung „Gär- und Reifungszeiten“, die sich nicht technologisch komprimieren lassen. Eigenständig gegenüber <a class="hlink" href="#h8">H8</a> (kognitiv) und <a class="hlink" href="#h14">H14</a> (sozial): Hier geht es um Tempo, Last und Regeneration.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Ein Arbeitstempo, das dauerhaft tragfähig ist, und Reife- und Reflexionszeiten, in denen echtes Lernen stattfindet.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: kein systematischer Kausalnachweis.</em> Berkler, Rütter &amp; Helpap (2026, Whitepaper; 13 Experteninterviews und Sekundäranalyse) verdichten mehrere Beobachtungen: permanente Verfügbarkeit erzeuge Beschleunigungsdruck, und maschinelle Dauerverfügbarkeit plus menschliche Letztverantwortung könnten bis zu Erschöpfung wirken; Veränderung brauche Reifezeit. Erste neurokognitive Befunde zu reduziertem Engagement bei intensiver KI-Nutzung (Kosmyna et al., 2025; vgl. <a class="hlink" href="#h8">H8</a>) weisen in dieselbe Richtung. Interviewbasiert und teils korrelativ, Grund für achtsames Design, nicht für Alarmismus.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: kein systematischer Kausalnachweis.</em> Berkler, Rütter &amp; Helpap (2026, Whitepaper; 13 Experteninterviews und Sekundäranalyse) verdichten mehrere Beobachtungen: permanente Verfügbarkeit erzeuge Beschleunigungsdruck, und maschinelle Dauerverfügbarkeit plus menschliche Letztverantwortung könnten bis zu Erschöpfung wirken; Veränderung brauche Reifezeit. Erste neurokognitive Befunde zu reduziertem Engagement bei intensiver KI-Nutzung (Kosmyna et al., 2025; vgl. <a class="hlink" href="#h8">H8</a>) weisen in dieselbe Richtung. Mizrak et al. (2026) untersuchen verdeckte KI-Nutzung speziell in der Beratung: Wo die eigene Denkleistung das Produkt ist, steht bei der Offenlegung mehr auf dem Spiel. Interviewbasiert und teils korrelativ, Grund für achtsames Design, nicht für Alarmismus.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Tempo entkoppeln: Das Ausgabetempo der KI ist keine Vorgabe für die menschliche Reaktions- oder Entscheidungszeit.</li>
             <li>Reflexions- und Reifezeiten strukturell schützen, durch Führung und bewusste Entscheidung; nicht jeder gewonnene Freiraum wird sofort mit Produktivität gefüllt (vgl. <a class="hlink" href="#h7">H7</a>, <a class="hlink" href="#h15">H15</a>, <a class="hlink" href="#h21">H21</a>).</li>
@@ -652,19 +747,20 @@
       </article>
 
       <article class="card" id="h18">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h18-body">
           <span class="h-num">18</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">KI zum beschleunigten Kompetenzaufbau von (Quer-)Einsteiger:innen nutzen, statt diese Rollen zu streichen <span class="h-ev">[fundiert]</span></h3>
-            <p class="h-kern">KI hebt <b>Einsteiger und weniger Erfahrene am stärksten</b>, weil sie das implizite Wissen der Besten verfügbar macht. Nutze den Hebel für Einarbeitung und Entwicklung, nicht nur für Kostensenkung.</p>
+            <p class="h-kern v-full">KI hebt <b>Einsteiger und weniger Erfahrene am stärksten</b>, weil sie das implizite Wissen der Besten verfügbar macht. Nutze den Hebel für Einarbeitung und Entwicklung, nicht nur für Kostensenkung.</p>
+            <p class="h-kern v-light">Nutze KI, um Neulingen das Erfahrungswissen der Besten mitzugeben, statt Einstiegsstellen wegzurationalisieren. Wer heute Nachwuchsrollen streicht, hat morgen keine erfahrenen Profis mehr, die KI-Ergebnisse überhaupt beurteilen können.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h18-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Der am besten belegte Produktivitätseffekt bleibt oft ungenutzt oder wirkt destruktiv: Organisationen streichen Junior-Rollen, statt Junioren schneller kompetent zu machen (verschärft das Pipeline-Problem aus <a class="hlink" href="#h9">H9</a>). Oder sie behandeln alle Nutzergruppen gleich, obwohl Erfahrene kaum profitieren.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Schnellere Einarbeitung, Diffusion des Wissens der Besten und höhere Bindung neuer Kräfte.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p>Brynjolfsson, Li &amp; Raymond (2025, Quarterly Journal of Economics; 5.172 Kundensupport-Kräfte) fanden +15 % Produktivität im Mittel, mit starker Heterogenität: Einsteiger gewinnen bei Tempo und Qualität deutlich, die Erfahrensten kaum. Mechanismus: Die KI diffundiert die Best Practices der Stärksten; nebenbei stiegen Kundenzufriedenheit und Mitarbeiterbindung. Noy &amp; Zhang (2023, Science) zeigen konsistent rund 40 % Zeitgewinn bei steigender Qualität und schrumpfende Leistungsunterschiede.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p>Brynjolfsson, Li &amp; Raymond (2025, Quarterly Journal of Economics; 5.172 Kundensupport-Kräfte) fanden +15 % Produktivität im Mittel, mit starker Heterogenität: Einsteiger gewinnen bei Tempo und Qualität deutlich, die Erfahrensten kaum. Mechanismus: Die KI diffundiert die Best Practices der Stärksten; nebenbei stiegen Kundenzufriedenheit und Mitarbeiterbindung. Noy &amp; Zhang (2023, Science) zeigen konsistent rund 40 % Zeitgewinn bei steigender Qualität und schrumpfende Leistungsunterschiede. Nagarajan (2026) nennt das Muster <b>neuroadaptive Überanpassung</b>: Überoptimierung auf kurzfristige Erfolgsproxys (weniger Anstrengung, schnelle Akzeptanz, glatte Erledigung) bei gleichzeitiger Drift von den dauerhaften Zielen. Gegenentwurf ist ein abgestuftes Unterstützungstempo, langsam dort, wo Eigenständigkeit und Lernen auf dem Spiel stehen.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
             <li>Einarbeitung neu denken: KI als kodifiziertes Erfahrungswissen der Besten, Onboarding aus dokumentierter Spitzenpraxis statt generischer Handbücher.</li>
             <li>Nutzergruppen differenzieren: Einsteiger anders unterstützen (Anleitung, Beispiele) als Erfahrene (Sparring, Gegenpositionen, vgl. <a class="hlink" href="#h8">H8</a>).</li>
@@ -676,21 +772,22 @@
       </article>
 
       <article class="card" id="h19">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h19-body">
           <span class="h-num">19</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">KI als Brücke über Fachsilos nutzen und die Zusammenarbeit neu gestalten <span class="h-ev">[indikativ]</span></h3>
-            <p class="h-kern">KI kann Fachleuten Zugang zu <b>neuen Expertisen</b> geben und macht damit die gesamte Verantwortungs- und Aufgabenteilung im Unternehmen neu gestaltbar. Nutze diesen Moment, um Zuständigkeiten grundsätzlich neu zu schneiden, statt nur bestehende Abläufe zu verbessern, als Ergänzung, nicht als Ersatz menschlicher Zusammenarbeit.</p>
+            <p class="h-kern v-full">KI kann Fachleuten Zugang zu <b>neuen Expertisen</b> geben und macht damit die gesamte Verantwortungs- und Aufgabenteilung im Unternehmen neu gestaltbar. Nutze diesen Moment, um Zuständigkeiten grundsätzlich neu zu schneiden, statt nur bestehende Abläufe zu verbessern, als Ergänzung, nicht als Ersatz menschlicher Zusammenarbeit.</p>
+            <p class="h-kern v-light">Setze KI als ersten Übersetzer zwischen den Disziplinen ein, damit Teams vorbereitet und auf Augenhöhe sprechen. Sie ersetzt keine Zusammenarbeit, reduziert aber einseitige Vorlagen und schont überlastete Fachbereiche.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h19-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Wenn KI Fachwissen dorthin bringt, wo es bisher fehlte, wird nicht nur eine einzelne Schnittstelle besser, sondern die sinnvolle Verantwortungs- und Aufgabenteilung im gesamten Unternehmen wird neu verhandelbar: Wer eine Aufgabe heute nicht übernehmen kann, weil ihm die Fachkenntnis fehlt, kann sie morgen übernehmen. Das eröffnet die Chance, Zuständigkeiten grundsätzlich neu zu schneiden. Wird das nicht aktiv gestaltet, bleibt diese Chance ungenutzt: Lösungen bleiben einseitig, Schnittstellen bleiben starr, und chronisch überlastete Fachabteilungen erhalten weiterhin unausgereifte Anfragen, obwohl die anfragende Seite dank KI selbst bessere Vorarbeit leisten könnte. Oder die Chance kippt ins Gegenteil: KI ersetzt Teamarbeit, statt sie zu ergänzen (Risiko aus <a class="hlink" href="#h14">H14</a>).</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Grundsätzlich neu gestaltbare Verantwortungs- und Aufgabenteilung im Unternehmen.</p></div>
-          <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: starke, präregistrierte Basis, aber (noch) Arbeitspapier.</em> Dell'Acqua et al. (2025, „The Cybernetic Teammate", NBER/HBS Working Paper; 776 Fachleute bei Procter &amp; Gamble) fanden: Einzelpersonen mit KI erreichten das Niveau von Zweierteams ohne KI. Zentral hier: KI baute Fachsilos ab: Vorschläge von R&amp;D- und Commercial-Fachleuten wurden mit KI ausgewogener; zudem positivere emotionale Erfahrungen. Noch nicht peer-reviewt publiziert und industriefinanziert (P&amp;G), daher indikativ, mit Aufstiegsoption.</p></div>
+          <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: starke, präregistrierte Basis, aber (noch) Arbeitspapier.</em> Dell’Acqua et al. (2025, „The Cybernetic Teammate“, NBER/HBS Working Paper; 776 Fachleute bei Procter &amp; Gamble) fanden: Einzelpersonen mit KI erreichten das Niveau von Zweierteams ohne KI. Zentral hier: KI baute Fachsilos ab: Vorschläge von R&amp;D- und Commercial-Fachleuten wurden mit KI ausgewogener; zudem positivere emotionale Erfahrungen. Noch nicht peer-reviewt publiziert und industriefinanziert (P&amp;G), daher indikativ, mit Aufstiegsoption. Cavalcante (2026) modelliert KI, organisationale Koordination und Produktivitätsheterogenität evolutionär: Der Produktivitätseffekt hängt weniger am Werkzeug als an der Koordination zwischen Bereichen.</p></div>
           <div class="detail"><h4>Gestaltungsprinzipien</h4><ul>
-            <li>KI als „ersten Übersetzer" an Fachgrenzen einsetzen: Vorschläge früh gegen die Perspektive der Nachbardisziplin prüfen lassen, bevor das cross-funktionale Meeting stattfindet.</li>
+            <li>KI als „ersten Übersetzer“ an Fachgrenzen einsetzen: Vorschläge früh gegen die Perspektive der Nachbardisziplin prüfen lassen, bevor das cross-funktionale Meeting stattfindet.</li>
             <li>Schnittstellen aktiv neu zuschneiden: prüfen, welche Vorarbeit eine anfragende Abteilung dank KI selbst leisten kann, um überlastete Fachabteilungen zu entlasten (Beispiel: ein KI-gestütztes juristisches Vordokument statt eines Abstimmungsmeetings mit der Rechtsabteilung).</li>
             <li>Die Brücke ergänzt, ersetzt nicht: Verantwortung, Beziehungsaufbau und finale Integration bleiben bei menschlichen Teams (vgl. <a class="hlink" href="#h13">H13</a>, <a class="hlink" href="#h14">H14</a>).</li>
             <li>Besonders wertvoll für kleine Einheiten und Randzeiten, in denen die Nachbardisziplin real nicht verfügbar ist.</li>
@@ -701,16 +798,17 @@
       </article>
 
       <article class="card" id="h21">
-        <button class="acc-head" aria-expanded="false">
+        <button class="acc-head" aria-expanded="false" aria-controls="h21-body">
           <span class="h-num">21</span>
           <span class="h-main">
             <span class="h-tag">Organisation</span>
             <h3 class="h-title">Freigesetzte Kapazität bewusst investieren <span class="h-ev">[indikativ]</span></h3>
-            <p class="h-kern">Entscheide aktiv, <b>wohin die durch KI gewonnene Zeit fließt</b>, etwa in höhere Quantität, höhere Qualität oder ein erweitertes Aufgabenspektrum, statt sie stillschweigend in Verdichtung aufgehen zu lassen.</p>
+            <p class="h-kern v-full">Entscheide aktiv, <b>wohin die durch KI gewonnene Zeit fließt</b>, etwa in höhere Quantität, höhere Qualität oder ein erweitertes Aufgabenspektrum, statt sie stillschweigend in Verdichtung aufgehen zu lassen.</p>
+            <p class="h-kern v-light">Gewonnene Zeit fließt selten in den Feierabend, sondern wird stillschweigend mit noch mehr Arbeit gefüllt. Entscheide proaktiv, wohin die Dividende fließt: in höhere Qualität, neue Ideen oder gezielte Entlastung.</p>
           </span>
           <span class="toggle" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc-body"><div class="inner"><div class="body-pad">
+        <div class="acc-body" id="h21-body"><div class="inner"><div class="body-pad">
           <div class="detail"><h4>Ohne Gestaltung</h4><p>Ohne bewusste Entscheidung füllt sich gewonnene Zeit von selbst: mehr Volumen, höhere Taktung, stille Erwartungsinflation, ohne dass Erwartungen oder Ressourcen angepasst werden. Das unterscheidet sich von einer bewusst gewählten Mengensteigerung, etwa bei Auftragsspitzen, bei der die Rahmenbedingungen mitgedacht werden. Die Dividende verpufft in ungeplanter Arbeitsverdichtung (Negativszenario aus <a class="hlink" href="#h1">H1</a> und <a class="hlink" href="#h16">H16</a>), die Belastung steigt, und die Organisation verliert ihr stärkstes internes Argument für die Transformation: den erlebbaren Gewinn für die Beschäftigten. Eigenständig gegenüber <a class="hlink" href="#h16">H16</a> (Tempo/Regeneration): hier geht es um die bewusste Allokation.</p></div>
           <div class="detail"><h4>Ermöglicht</h4><p>Eine bewusst gewählte Dividende aus mehr, besserer und anderer Arbeit, und ein Gewinn, den Beschäftigte erleben.</p></div>
           <div class="detail"><h4>Evidenz</h4><p><em>Indikativ: die Zeitgewinne sind fundiert belegt, ihre Verwendung nicht.</em> Zeitgewinne sind gut dokumentiert: rund 40 % beim professionellen Schreiben (Noy &amp; Zhang, 2023), rund 56 % mit GitHub Copilot (Peng et al., 2023, Preprint), +15 % im Kundensupport (Brynjolfsson et al., 2025). Wohin die Zeit fließt, ist jedoch eine Gestaltungsentscheidung, kein Automatismus. Die Work-Design-Forschung (Parker &amp; Grote, 2020) legt nahe, dass Reinvestition in Job-Ressourcen Motivation und Leistung stärkt, während reine Verdichtung die Belastung erhöht.</p></div>
@@ -738,7 +836,7 @@
   <div class="wrap foot-inner">
     <div class="foot-meta">
       <span>Grubengold · <b>Menschenzentrierte KI-Transformation</b></span>
-      <span>Made with <span class="heart">♥</span> in Bochum · v0.9.2+ · Stand August 2026</span>
+      <span>Made with <span class="heart">♥</span> in Bochum · v0.15 · Stand November 2026</span>
     </div>
     <div class="foot-license">
       <a class="cc-badge" href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" title="Creative Commons Namensnennung, Weitergabe unter gleichen Bedingungen 4.0 International">
@@ -751,27 +849,78 @@
 
 <script>
   (function(){
+    var KEY = 'gg-heuristiken-ansicht';
+    var body = document.body;
     var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
-    cards.forEach(function(card){
-      var head = card.querySelector('.acc-head');
-      head.addEventListener('click', function(){
-        var open = card.classList.toggle('open');
-        head.setAttribute('aria-expanded', open ? 'true' : 'false');
-        syncToggleAll();
-      });
-    });
     var btn = document.getElementById('toggleAll');
+    var viewBtns = Array.prototype.slice.call(document.querySelectorAll('.seg button'));
+
+    function isLight(){ return body.classList.contains('view-light'); }
+
+    function setOpen(card, open){
+      card.classList.toggle('open', open);
+      var h = card.querySelector('.acc-head');
+      if(h && !isLight()) h.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
     function syncToggleAll(){
       var allOpen = cards.every(function(c){return c.classList.contains('open');});
       btn.textContent = allOpen ? 'Alle zuklappen' : 'Alle aufklappen';
       btn.setAttribute('aria-pressed', allOpen ? 'true' : 'false');
     }
+
+    // In der kurzen Variante sind die Karten keine Aufklapp-Schalter.
+    function syncHeads(){
+      var light = isLight();
+      cards.forEach(function(c){
+        var h = c.querySelector('.acc-head');
+        h.disabled = light;
+        if(light){
+          h.removeAttribute('aria-expanded');
+          h.removeAttribute('aria-controls');
+        } else {
+          h.setAttribute('aria-expanded', c.classList.contains('open') ? 'true' : 'false');
+          h.setAttribute('aria-controls', c.id + '-body');
+        }
+      });
+      viewBtns.forEach(function(b){
+        b.setAttribute('aria-pressed', (b.getAttribute('data-view') === (light ? 'light' : 'full')) ? 'true' : 'false');
+      });
+    }
+
+    // Beim Umschalten bleibt die Karte, die gerade oben steht, an ihrer Position.
+    function setView(view){
+      if((view === 'light') === isLight()) return;
+      var bar = document.querySelector('.legend-bar');
+      var top = bar ? bar.getBoundingClientRect().bottom : 0;
+      var anchor = null, offset = 0;
+      for(var i = 0; i < cards.length; i++){
+        var r = cards[i].getBoundingClientRect();
+        if(r.bottom > top + 8){ anchor = cards[i]; offset = r.top; break; }
+      }
+      body.classList.toggle('view-light', view === 'light');
+      syncHeads();
+      if(anchor && window.scrollY > 0){
+        window.scrollBy(0, anchor.getBoundingClientRect().top - offset);
+      }
+      try{ localStorage.setItem(KEY, view); }catch(e){}
+    }
+
+    viewBtns.forEach(function(b){
+      b.addEventListener('click', function(){ setView(b.getAttribute('data-view')); });
+    });
+
+    cards.forEach(function(card){
+      card.querySelector('.acc-head').addEventListener('click', function(){
+        if(isLight()) return;
+        setOpen(card, !card.classList.contains('open'));
+        syncToggleAll();
+      });
+    });
+
     btn.addEventListener('click', function(){
       var allOpen = cards.every(function(c){return c.classList.contains('open');});
-      cards.forEach(function(c){
-        c.classList.toggle('open', !allOpen);
-        c.querySelector('.acc-head').setAttribute('aria-expanded', (!allOpen).toString());
-      });
+      cards.forEach(function(c){ setOpen(c, !allOpen); });
       syncToggleAll();
     });
 
@@ -779,35 +928,26 @@
       a.addEventListener('click', function(){
         var t = document.getElementById(a.getAttribute('href').slice(1));
         if(t && t.classList.contains('card') && !t.classList.contains('open')){
-          t.classList.add('open');
-          var h = t.querySelector('.acc-head');
-          if(h) h.setAttribute('aria-expanded','true');
+          setOpen(t, true);
           syncToggleAll();
         }
       });
     });
+
+    // Direktlink auf eine Heuristik (#h7): in der detaillierten Variante aufklappen und hinscrollen
+    function openHashCard(){
+      if(!window.location.hash) return;
+      var card = document.getElementById(window.location.hash.slice(1));
+      if(!card || !card.classList.contains('card')) return;
+      if(!card.classList.contains('open')){ setOpen(card, true); syncToggleAll(); }
+      setTimeout(function(){ card.scrollIntoView({block:'start'}); }, 60);
+    }
+
+    syncHeads();
+    syncToggleAll();
+    openHashCard();
+    window.addEventListener('hashchange', openHashCard);
   })();
 </script>
-  <script>
-    // Auto-expand heuristic on hash link
-    function openHashCard() {
-      if (window.location.hash) {
-        const cardId = window.location.hash.slice(1); // Remove '#'
-        const card = document.getElementById(cardId);
-        if (card) {
-          const button = card.querySelector('.acc-head');
-          if (button && button.getAttribute('aria-expanded') === 'false') {
-            button.setAttribute('aria-expanded', 'true');
-            const body = card.querySelector('.acc-body');
-            if (body) body.style.display = 'block';
-          }
-          // Smooth scroll to card after a small delay
-          setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-        }
-      }
-    }
-    document.addEventListener('DOMContentLoaded', openHashCard);
-    window.addEventListener('hashchange', openHashCard);
-  </script>
 </body>
 </html>
